@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Finans Chatbot</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #2c3e50;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 40px;
+            max-width: 700px;
+            margin: auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+        #chat-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            background-color: #fdfdfd;
+        }
+        .user {
+            text-align: right;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .bot {
+            text-align: left;
+            color: #16a085;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+        }
+        button {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div style="margin-left: 20px; color: white;">FinanceBot</div>
+    <div style="margin-right: 20px;">
+        <a href="/">Ana Sayfa</a>
+        <a href="/charts/">Grafikler</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Finans Chatbot</h2>
+    <div id="chat-box"></div>
+    <form id="chat-form">
+        {% csrf_token %}
+        <input type="text" id="user-input" name="message" placeholder="Mesajınızı yazın..." required>
+        <button type="submit">Gönder</button>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        // Kullanıcı mesajını ekle
+        chatBox.innerHTML += `<div class="user"><strong>Sen:</strong> ${message}</div>`;
+        userInput.value = '';
+
+        try {
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+
+            // Bot cevabını ekle
+            chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> ${data.response}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (error) {
+            chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> Bir hata oluştu.</div>`;
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FinanceBot</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Ana Sayfa</a> |
+        <a href="{% url 'charts' %}">Grafikler</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>
