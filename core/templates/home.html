@@ -66,11 +66,10 @@
 <body>
 
 <nav>
-    <div style="margin-left: 20px; color: white;">FinanceBot</div>
-    <div style="margin-right: 20px;">
-        <a href="/">Ana Sayfa</a>
-        <a href="/charts/">Grafikler</a>
-    </div>
+  <ul>
+    <li><a href="{% url 'home' %}">Ana Sayfa</a></li>
+    <li><a href="{% url 'charts' %}">Grafikler</a></li>
+  </ul>
 </nav>
 
 <div class="container">

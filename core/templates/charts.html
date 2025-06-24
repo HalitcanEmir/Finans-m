@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Hisse Sorgulama</title>
+    <style>
+        .data-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+        .card { background: #f8fafd; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 18px; min-width: 120px; text-align: center; box-shadow: 0 1px 4px #0001; }
+        .chart-container { margin-top: 32px; text-align: center; }
+        .interval-select { margin-top: 12px; }
+    </style>
+</head>
+<body>
+    <h1>Hisse Sorgulama</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="symbol" placeholder="Örn: NVDA, AAPL" required {% if symbol %}value="{{ symbol }}"{% endif %}>
+        <select name="interval" class="interval-select">
+            {% for code, label, period, interval in intervals %}
+                <option value="{{ code }}" {% if code == selected_interval %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Verileri Göster</button>
+    </form>
+    {% if current_price %}
+    <div class="data-cards">
+        <div class="card"><b>Seçili Aralık Yüksek</b><br>${{ range_high|floatformat:2 }}</div>
+        <div class="card"><b>Seçili Aralık Düşük</b><br>${{ range_low|floatformat:2 }}</div>
+        <div class="card"><b>Seçili Aralık Ortalama</b><br>${{ range_mean|floatformat:2 }}</div>
+        <div class="card"><b>Seçili Aralık Son Fiyat</b><br>${{ range_last|floatformat:2 }}</div>
+        <div class="card"><b>Piyasa Değeri</b><br>${{ market_cap }}</div>
+        <div class="card"><b>52H Yüksek</b><br>${{ fifty_two_week_high }}</div>
+        <div class="card"><b>52H Düşük</b><br>${{ fifty_two_week_low }}</div>
+        <div class="card"><b>Hedef Fiyat</b><br>${{ target_mean_price }}</div>
+    </div>
+    {% endif %}
+    {% if chart_image %}
+    <div class="chart-container">
+        <h3>{{ symbol }} - {{ selected_interval_label }}</h3>
+        <img src="data:image/png;base64,{{ chart_image }}" alt="Fiyat Grafiği" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
+    </div>
+    {% endif %}
+</body>
+</html> 
