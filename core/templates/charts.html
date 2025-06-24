@@ -8,6 +8,14 @@
         .card { background: #f8fafd; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 18px; min-width: 120px; text-align: center; box-shadow: 0 1px 4px #0001; }
         .chart-container { margin-top: 32px; text-align: center; }
         .interval-select { margin-top: 12px; }
+        .error-message { 
+            background-color: #fff3f3; 
+            border: 1px solid #ffcdd2; 
+            color: #d32f2f; 
+            padding: 12px 16px; 
+            border-radius: 4px; 
+            margin: 16px 0; 
+        }
     </style>
 </head>
 <body>
@@ -22,22 +30,84 @@
         </select>
         <button type="submit">Verileri Göster</button>
     </form>
+
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if chart_error %}
+    <div class="error-message">
+        {{ chart_error }}
+    </div>
+    {% endif %}
+
     {% if current_price %}
     <div class="data-cards">
-        <div class="card"><b>Seçili Aralık Yüksek</b><br>${{ range_high|floatformat:2 }}</div>
-        <div class="card"><b>Seçili Aralık Düşük</b><br>${{ range_low|floatformat:2 }}</div>
-        <div class="card"><b>Seçili Aralık Ortalama</b><br>${{ range_mean|floatformat:2 }}</div>
-        <div class="card"><b>Seçili Aralık Son Fiyat</b><br>${{ range_last|floatformat:2 }}</div>
-        <div class="card"><b>Piyasa Değeri</b><br>${{ market_cap }}</div>
-        <div class="card"><b>52H Yüksek</b><br>${{ fifty_two_week_high }}</div>
-        <div class="card"><b>52H Düşük</b><br>${{ fifty_two_week_low }}</div>
-        <div class="card"><b>Hedef Fiyat</b><br>${{ target_mean_price }}</div>
+        <div class="card"><b>Seçili Aralık Yüksek</b><br>{% if range_high %}${{ range_high|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>Seçili Aralık Düşük</b><br>{% if range_low %}${{ range_low|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>Seçili Aralık Ortalama</b><br>{% if range_mean %}${{ range_mean|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>Seçili Aralık Son Fiyat</b><br>{% if range_last %}${{ range_last|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>Piyasa Değeri</b><br>{% if market_cap %}${{ market_cap }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>52H Yüksek</b><br>{% if fifty_two_week_high %}${{ fifty_two_week_high }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>52H Düşük</b><br>{% if fifty_two_week_low %}${{ fifty_two_week_low }}{% else %}Veri yok{% endif %}</div>
+        <div class="card"><b>Hedef Fiyat</b><br>{% if target_mean_price %}${{ target_mean_price }}{% else %}Veri yok{% endif %}</div>
+    </div>
+    <div class="card" style="margin-top:24px; max-width:400px; margin-left:auto; margin-right:auto;">
+        <div class="card-header">
+            <h5>📊 Temel Finansal Göstergeler</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group" style="list-style:none; padding:0;">
+                <li class="list-group-item"><strong>F/K (PE):</strong> {{ pe_ratio }}</li>
+                <li class="list-group-item"><strong>PD/DD (PB):</strong> {{ pb_ratio }}</li>
+                <li class="list-group-item"><strong>ROE:</strong> {{ roe }}</li>
+                <li class="list-group-item"><strong>Borç / Özsermaye:</strong> {{ de_ratio }}</li>
+            </ul>
+        </div>
     </div>
     {% endif %}
     {% if chart_image %}
     <div class="chart-container">
         <h3>{{ symbol }} - {{ selected_interval_label }}</h3>
         <img src="data:image/png;base64,{{ chart_image }}" alt="Fiyat Grafiği" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
+        {% if last_updated %}
+        <p>Veriler güncellenme zamanı: {{ last_updated }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% if price_volume_chart or ma_chart or rsi_chart or macd_chart %}
+    <div class="chart-container">
+        <h2>Teknik Analiz Grafikler</h2>
+        {% if price_volume_chart %}
+        <div style="margin-bottom:24px;">
+            <h4>Fiyat ve Hacim</h4>
+            <img src="data:image/png;base64,{{ price_volume_chart }}" alt="Fiyat ve Hacim" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
+            <div style="font-size:13px; color:#555;">Fiyat (çizgi) ve hacim (bar) aynı grafikte gösterilir.</div>
+        </div>
+        {% endif %}
+        {% if ma_chart %}
+        <div style="margin-bottom:24px;">
+            <h4>Hareketli Ortalamalar (MA50 & MA200)</h4>
+            <img src="data:image/png;base64,{{ ma_chart }}" alt="MA50 ve MA200" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
+            <div style="font-size:13px; color:#555;">Fiyat, 50 ve 200 günlük hareketli ortalamalar ile birlikte gösterilir.</div>
+        </div>
+        {% endif %}
+        {% if rsi_chart %}
+        <div style="margin-bottom:24px;">
+            <h4>RSI (Relative Strength Index)</h4>
+            <img src="data:image/png;base64,{{ rsi_chart }}" alt="RSI" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
+            <div style="font-size:13px; color:#555;">RSI son 14 günlük fiyat ivmesini gösterir. 70 üzeri aşırı alım, 30 altı aşırı satım bölgesidir.</div>
+        </div>
+        {% endif %}
+        {% if macd_chart %}
+        <div style="margin-bottom:24px;">
+            <h4>MACD</h4>
+            <img src="data:image/png;base64,{{ macd_chart }}" alt="MACD" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
+            <div style="font-size:13px; color:#555;">MACD ve sinyal çizgisi ile trend değişimleri analiz edilir.</div>
+        </div>
+        {% endif %}
     </div>
     {% endif %}
 </body>

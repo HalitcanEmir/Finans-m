@@ -135,10 +135,59 @@ def grafik_view(request):
     return render(request, 'grafikler.html', {'chart': chart})
 
 def get_stock_data(symbol, period, interval):
-    stock = yf.Ticker(symbol)
-    hist = stock.history(period=period, interval=interval)
-    if hist.empty:
+    try:
+        stock = yf.Ticker(symbol)
+        hist = stock.history(period=period, interval=interval)
+        info = stock.info
+        
+        # Print debug information
+        print(f"Symbol: {symbol}")
+        print(f"History data available: {not hist.empty if hist is not None else False}")
+        print(f"Info data available: {bool(info)}")
+        
+        pe_ratio = info.get("trailingPE") or info.get("forwardPE") or "Veri yok"
+        pb_ratio = info.get("priceToBook", "Veri yok")
+        roe = info.get("returnOnEquity", "Veri yok")
+        de_ratio = info.get("debtToEquity", "Veri yok")
+        
+        if hist is None or hist.empty:
+            print(f"No historical data found for {symbol}")
+            return {
+                "error": f"Hisse senedi verisi bulunamadı: {symbol}",
+                "current_price": None,
+                "market_cap": None,
+                "fifty_two_week_high": None,
+                "fifty_two_week_low": None,
+                "target_mean_price": None,
+                "range_high": None,
+                "range_low": None,
+                "range_mean": None,
+                "range_last": None,
+                "pe_ratio": pe_ratio,
+                "pb_ratio": pb_ratio,
+                "roe": roe,
+                "de_ratio": de_ratio,
+            }
+            
         return {
+            "current_price": hist["Close"].iloc[-1] if not hist.empty else None,
+            "market_cap": info.get("marketCap"),
+            "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
+            "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
+            "target_mean_price": info.get("targetMeanPrice"),
+            "range_high": hist["Close"].max() if not hist.empty else None,
+            "range_low": hist["Close"].min() if not hist.empty else None,
+            "range_mean": hist["Close"].mean() if not hist.empty else None,
+            "range_last": hist["Close"].iloc[-1] if not hist.empty else None,
+            "pe_ratio": pe_ratio,
+            "pb_ratio": pb_ratio,
+            "roe": roe,
+            "de_ratio": de_ratio,
+        }
+    except Exception as e:
+        print(f"Error fetching data for {symbol}: {str(e)}")
+        return {
+            "error": f"Veri çekilirken hata oluştu: {str(e)}",
             "current_price": None,
             "market_cap": None,
             "fifty_two_week_high": None,
@@ -148,18 +197,11 @@ def get_stock_data(symbol, period, interval):
             "range_low": None,
             "range_mean": None,
             "range_last": None,
+            "pe_ratio": "Veri yok",
+            "pb_ratio": "Veri yok",
+            "roe": "Veri yok",
+            "de_ratio": "Veri yok",
         }
-    return {
-        "current_price": hist["Close"].iloc[-1],
-        "market_cap": stock.info.get("marketCap"),
-        "fifty_two_week_high": stock.info.get("fiftyTwoWeekHigh"),
-        "fifty_two_week_low": stock.info.get("fiftyTwoWeekLow"),
-        "target_mean_price": stock.info.get("targetMeanPrice"),
-        "range_high": hist["Close"].max(),
-        "range_low": hist["Close"].min(),
-        "range_mean": hist["Close"].mean(),
-        "range_last": hist["Close"].iloc[-1],
-    }
 
 def get_price_chart(symbol, period, interval):
     stock = yf.Ticker(symbol)
@@ -177,6 +219,9 @@ def get_price_chart(symbol, period, interval):
     buf.close()
     return base64.b64encode(image_png).decode('utf-8')
 
+def get_timestamp():
+    return datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+
 def charts(request):
     context = {}
     intervals = [
@@ -192,22 +237,42 @@ def charts(request):
     context['intervals'] = intervals
     context['selected_interval'] = '1mo'
     context['selected_interval_label'] = '1 Ay'
+    context['pe_ratio'] = 'Veri yok'
+    context['pb_ratio'] = 'Veri yok'
+    context['roe'] = 'Veri yok'
+    context['de_ratio'] = 'Veri yok'
+    
     if request.method == 'POST':
-        symbol = request.POST.get('symbol', '').upper().strip()
-        selected = request.POST.get('interval', '1mo')
-        for code, label, period, interval in intervals:
-            if code == selected:
-                selected_period = period
-                selected_interval = interval
-                context['selected_interval'] = code
-                context['selected_interval_label'] = label
-                break
-        else:
-            selected_period = '1mo'
-            selected_interval = '1d'
+        symbol = request.POST.get('symbol', '').strip()
         if symbol:
+            symbol = symbol.upper()
+            selected = request.POST.get('interval', '1mo')
+            
+            # Print debug information
+            print(f"POST request received - Symbol: {symbol}, Interval: {selected}")
+            
+            for code, label, period, interval in intervals:
+                if code == selected:
+                    selected_period = period
+                    selected_interval = interval
+                    context['selected_interval'] = code
+                    context['selected_interval_label'] = label
+                    break
+            else:
+                selected_period = '1mo'
+                selected_interval = '1d'
+                
             data = get_stock_data(symbol, selected_period, selected_interval)
             context.update(data)
             context['symbol'] = symbol
-            context['chart_image'] = get_price_chart(symbol, selected_period, selected_interval)
+            
+            if "error" not in data:
+                try:
+                    context['chart_image'] = get_price_chart(symbol, selected_period, selected_interval)
+                except Exception as e:
+                    print(f"Error generating chart for {symbol}: {str(e)}")
+                    context['chart_error'] = f"Grafik oluşturulurken hata oluştu: {str(e)}"
+            
+            context['last_updated'] = get_timestamp()
+            
     return render(request, 'charts.html', context)
