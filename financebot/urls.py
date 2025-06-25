@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from core import views as core_views
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('yatirimcilar/', core_views.yatirimcilar, name='yatirimcilar'),
     path('borsa-nedir/', core_views.borsa_nedir, name='borsa_nedir'),
     path('sende-basla/', core_views.sende_basla, name='sende_basla'),
+    path('accounts/', include('accounts.urls')),
 ]

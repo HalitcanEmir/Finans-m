@@ -6,4 +6,11 @@
   <a href="/yatirimcilar/">Yatırımcılar</a> |
   <a href="/borsa-nedir/">Borsa Nedir?</a> |
   <a href="/sende-basla/">Sende Başla</a>
+  {% if user.is_authenticated %}
+    | <span>Hoşgeldin, {{ user.username }}</span>
+    | <a href="/accounts/logout/">Çıkış Yap</a>
+  {% else %}
+    | <a href="/accounts/login/">Giriş Yap</a>
+    | <a href="/accounts/register/">Kayıt Ol</a>
+  {% endif %}
 </nav> 

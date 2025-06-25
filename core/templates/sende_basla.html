@@ -1,2 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Sende Başla{% endblock %}
+
+{% block content %}
 <h1>Sende Başla</h1>
-<p>Burada sanal portföy oluşturabilir, hisse alımı yapabilirsin.</p> 
+<p>Burada sanal portföy oluşturabilir, hisse alımı yapabilirsin.</p>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="stock_symbol" placeholder="Hisse kodu">
+  <input type="number" name="quantity" placeholder="Adet" min="1" step="1">
+  <button type="submit">Satın Al</button>
+</form>
+
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+        {{ message }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% if portfolio %}
+  <h2>Bakiyeniz: ${{ portfolio.balance|floatformat:2 }}</h2>
+{% endif %}
+
+<h2>Portföyünüz</h2>
+<table border="1" cellpadding="8" style="border-collapse:collapse; margin-top:16px;">
+  <tr>
+    <th>Hisse</th>
+    <th>Adet</th>
+    <th>Alış Fiyatı</th>
+    <th>Güncel Fiyat</th>
+    <th>Kâr/Zarar</th>
+    <th>Kâr/Zarar (%)</th>
+  </tr>
+  {% if holdings and holdings|length > 0 %}
+    {% for h in holdings %}
+    <tr>
+      <td>{{ h.symbol }}</td>
+      <td>{{ h.quantity|floatformat:2 }}</td>
+      <td>${{ h.avg_price|floatformat:2 }}</td>
+      <td>
+        {% if h.current_price %}
+          ${{ h.current_price|floatformat:2 }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        {% if h.profit_loss %}
+          ${{ h.profit_loss|floatformat:2 }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        {% if h.profit_loss_pct %}
+          {{ h.profit_loss_pct|floatformat:2 }}%
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  {% else %}
+    <tr>
+      <td colspan="6" style="text-align:center;">Henüz hisse almadınız.</td>
+    </tr>
+  {% endif %}
+</table>
+{% endblock %} 

@@ -18,6 +18,9 @@ from django.views.decorators.http import require_GET
 from ta.trend import ADXIndicator
 import mplfinance as mpf
 from scipy.signal import find_peaks
+from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding
+from django.contrib import messages
+import requests
 
 # Ortam değişkenlerini yükle
 load_dotenv()
@@ -27,6 +30,8 @@ load_dotenv()
 #     base_url="https://openrouter.ai/api/v1",
 #     api_key=OPENROUTER_API_KEY,
 # )
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Ana sayfa (Chatbot)
 @csrf_exempt  # Geliştirme için, prod'da güvenlik ekle
@@ -862,27 +867,119 @@ def yatirimcilar(request):
 def borsa_nedir(request):
     return render(request, 'borsa_nedir.html')
 
+def gemini_chat(prompt):
+    system_message = "Sen bir yatırım danışmanısın. Kullanıcıya finansal konularda yardımcı ol."
+    full_prompt = f"{system_message}\n\n{prompt}"
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    headers = {"Content-Type": "application/json"}
+    params = {"key": GEMINI_API_KEY}
+    data = {
+        "contents": [
+            {"parts": [{"text": full_prompt}]}
+        ]
+    }
+    response = requests.post(url, headers=headers, params=params, json=data)
+    if response.status_code == 200:
+        return response.json()["candidates"][0]["content"]["parts"][0]["text"]
+    else:
+        return f"Hata: {response.text}"
+
 def chatbot(request):
+    response_text = ""
     if request.method == "POST":
-        try:
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-                user_input = data.get("message", "")
-            else:
-                user_input = request.POST.get("user_input", "")
-            response_text = ""
-            if user_input:
-                # completion = client.chat.completions.create(
-                #     ...
-                # )
-                # response_text = completion.choices[0].message.content.strip()
-                response_text = "API anahtarı tanımlı değil."
-            else:
-                response_text = "Lütfen bir mesaj girin."
-            return JsonResponse({"response": response_text})
-        except Exception as e:
-            return JsonResponse({"response": f"Hata: {str(e)}"})
-    return render(request, "chatbot.html")
+        user_input = request.POST.get("user_input", "")
+        if user_input:
+            response_text = gemini_chat(user_input)
+        else:
+            response_text = "Lütfen bir mesaj girin."
+    return render(request, "chatbot.html", {"response": response_text})
 
 def sende_basla(request):
-    return render(request, 'sende_basla.html')
+    holdings = []
+    portfolio = None
+    if request.user.is_authenticated:
+        portfolio, _ = VirtualPortfolio.objects.get_or_create(user=request.user)
+
+        if request.method == 'POST':
+            symbol = request.POST['stock_symbol'].upper()
+            try:
+                quantity = float(request.POST['quantity'])
+            except Exception:
+                messages.error(request, "Adet sayısı geçersiz.")
+                quantity = 0
+            try:
+                # Güncel fiyat al
+                stock = yf.Ticker(symbol)
+                price_hist = stock.history(period="1d")
+                if price_hist is None or price_hist.empty:
+                    messages.error(request, f"{symbol} için fiyat verisi alınamadı. ABD borsası kapalı olabilir veya hisse kodu yanlış.")
+                    price = None
+                else:
+                    price = price_hist['Close'][-1]
+            except Exception as e:
+                messages.error(request, f"Fiyat alınırken hata oluştu: {str(e)}")
+                price = None
+
+            if price is not None and quantity > 0:
+                total_cost = price * quantity
+                if portfolio.balance >= total_cost:
+                    try:
+                        portfolio.balance -= total_cost
+                        portfolio.save()
+                        VirtualTransaction.objects.create(
+                            user=request.user,
+                            stock_symbol=symbol,
+                            quantity=quantity,
+                            price=price,
+                            action='buy'
+                        )
+                        holding, created = VirtualHolding.objects.get_or_create(
+                            user=request.user, stock_symbol=symbol,
+                            defaults={'quantity': 0, 'avg_price': 0}
+                        )
+                        if created:
+                            holding.quantity = quantity
+                            holding.avg_price = price
+                        else:
+                            toplam_maliyet = holding.avg_price * holding.quantity + price * quantity
+                            holding.quantity += quantity
+                            holding.avg_price = toplam_maliyet / holding.quantity
+                        holding.save()
+                        messages.success(request, f"{symbol} alındı.")
+                    except Exception as e:
+                        messages.error(request, f"Kayıt sırasında hata oluştu: {str(e)}")
+                else:
+                    messages.error(request, "Yetersiz bakiye.")
+            elif price is not None and quantity <= 0:
+                messages.error(request, "Adet 1'den büyük olmalı.")
+
+        # Kullanıcının portföyü
+        holdings_qs = VirtualHolding.objects.filter(user=request.user)
+        for h in holdings_qs:
+            try:
+                stock = yf.Ticker(h.stock_symbol)
+                price_hist = stock.history(period="1d")
+                if price_hist is None or price_hist.empty:
+                    current_price = None
+                else:
+                    current_price = price_hist['Close'][-1]
+            except Exception:
+                current_price = None
+            profit_loss = None
+            profit_loss_pct = None
+            if current_price is not None:
+                profit_loss = (current_price - h.avg_price) * h.quantity
+                profit_loss_pct = ((current_price - h.avg_price) / h.avg_price) * 100 if h.avg_price else None
+            holdings.append({
+                'symbol': h.stock_symbol,
+                'quantity': h.quantity,
+                'avg_price': h.avg_price,
+                'current_price': current_price,
+                'profit_loss': profit_loss,
+                'profit_loss_pct': profit_loss_pct,
+            })
+
+    return render(request, 'sende_basla.html', {
+        'portfolio': portfolio,
+        'holdings': holdings,
+    })
