@@ -1,16 +1,33 @@
-<nav style="background:#111; padding:1rem; color:white;">
-  <a href="/">Ana Sayfa</a> |
-  <a href="/hisse-analizi/">Hisse Analizi</a> |
-  <a href="/chatbot/">Yapay Zekâya Danış</a> |
-  <a href="/egitim/">Eğitim</a> |
-  <a href="/yatirimcilar/">Yatırımcılar</a> |
-  <a href="/borsa-nedir/">Borsa Nedir?</a> |
-  <a href="/sende-basla/">Sende Başla</a>
-  {% if user.is_authenticated %}
-    | <span>Hoşgeldin, {{ user.username }}</span>
-    | <a href="/accounts/logout/">Çıkış Yap</a>
-  {% else %}
-    | <a href="/accounts/login/">Giriş Yap</a>
-    | <a href="/accounts/register/">Kayıt Ol</a>
-  {% endif %}
-</nav> 
+<nav id="mainNavbar" class="navbar" style="position:fixed; top:0; left:0; width:100%; z-index:100; background:rgba(31, 18, 43, 0.0); transition: background 0.35s cubic-bezier(.23,1.01,.32,1); box-shadow:0 2px 16px #0002; padding:1rem 0.5rem; color:white; backdrop-filter: blur(8px);">
+  <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:18px;">
+      <a href="/" style="font-weight:700; font-size:1.18rem; color:white; text-decoration:none;"><i class="fa-solid fa-coins"></i> Borsa Platformu</a>
+      <a href="/hisse-analizi/" style="color:white; text-decoration:none; font-weight:500;">Hisse Analizi</a>
+      <a href="/chatbot/" style="color:white; text-decoration:none; font-weight:500;">Yapay Zekâya Danış</a>
+      <a href="/egitim/" style="color:white; text-decoration:none; font-weight:500;">Eğitim</a>
+      <a href="/yatirimcilar/" style="color:white; text-decoration:none; font-weight:500;">Yatırımcılar</a>
+      <a href="/borsa-nedir/" style="color:white; text-decoration:none; font-weight:500;">Borsa Nedir?</a>
+      <a href="/sende-basla/" style="color:white; text-decoration:none; font-weight:500;">Sende Başla</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      {% if user.is_authenticated %}
+        <span style="color:#A0C1FF; font-weight:600;"><i class="fa-solid fa-user"></i> {{ user.username }}</span>
+        <a href="/accounts/logout/" style="color:white; text-decoration:none; font-weight:500;"><i class="fa-solid fa-sign-out-alt"></i> Çıkış Yap</a>
+      {% else %}
+        <a href="/accounts/login/" style="color:white; text-decoration:none; font-weight:500;"><i class="fa-solid fa-sign-in-alt"></i> Giriş Yap</a>
+        <a href="/accounts/register/" style="color:white; text-decoration:none; font-weight:500;"><i class="fa-solid fa-user-plus"></i> Kayıt Ol</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+<script>
+window.addEventListener('scroll', function() {
+  var nav = document.getElementById('mainNavbar');
+  if(window.scrollY > 24) {
+    nav.style.background = '#7F5AF0';
+  } else {
+    nav.style.background = 'rgba(31, 18, 43, 0.0)';
+  }
+});
+</script>
+<div style="height:68px;"></div> 
