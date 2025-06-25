@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modül 4: Teknik Analize Giriş – Temel Grafikler ve Göstergeler</title>
+    <meta name="description" content="Teknik analizde mum grafikleri, MA50, MA200, RSI ve MACD göstergeleri. Yeni başlayanlar için sade açıklamalar, örnekler ve grafik yer tutucularıyla detaylı rehber.">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; background: #f8f9fa; }
+        h1, h2 { color: #2c3e50; }
+        h2 { font-size: 1.5em; margin-top: 2em; }
+        .modul { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px #eee; margin-bottom: 32px; padding: 24px; }
+        .placeholder { background: #e9ecef; color: #888; text-align: center; padding: 18px; border-radius: 8px; margin: 18px 0; font-style: italic; }
+        em, .alt-baslik { color: #0074d9; font-style: italic; }
+        p { margin-bottom: 1.1em; }
+        .kaynak { font-size: 0.95em; color: #888; margin-bottom: 0.7em; }
+        ul { margin-bottom: 1.1em; }
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .modul { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Modül 4: Teknik Analize Giriş – Temel Grafikler ve Göstergeler</h1>
+
+    <div class="modul">
+        <h2>Teknik Analize Giriş: Temel Grafikler ve Göstergeler</h2>
+        <p>Teknik analiz, fiyat grafiklerini ve göstergeleri kullanarak piyasa davranışlarını anlamaya çalışır. İlk bakışta grafikler karmaşık görünse de, doğru yaklaşımla korkutucu olmadıklarını ve aslında sistemli okunduğunda güçlü sinyaller sunduklarını göreceksiniz. Bu rehberde yeni başlayanlar için temel grafik türü olan mum grafikleri ile dört yaygın göstergeyi (MA50, MA200, RSI ve MACD) sade bir dille açıklayacağız. Her biri için basit örnekler ve benzetmelerle, bu araçların ne işe yaradığını ve nasıl yorumlandığını öğreneceksiniz.</p>
+    </div>
+
+    <div class="modul">
+        <h2>Mum Grafikleri (Candlestick Charts)</h2>
+        <p><strong>Şekil 1:</strong> Basit bir mum grafiği temsili. Her bir dikdörtgen "mum", belirli bir zaman dilimindeki fiyat hareketini gösterir. Gövde, açılış ve kapanış fiyatlarını temsil ederken; üst ve alt fitiller o periyottaki en yüksek ve en düşük fiyatları gösterir. Mum grafikleri, fiyatların belirli bir zaman dilimindeki açılış, kapanış, en yüksek ve en düşük değerlerini tek bir sembolde gösterir.<span class="kaynak">Kaynak: getmidas.com</span></p>
+        <p>Mumun gövdesi o dönemdeki açılış ve kapanış fiyatlarını yansıtır. Yeşil (veya beyaz) bir mum, kapanışın açılıştan yüksek olduğunu (fiyatın yükseldiğini) belirtir; kırmızı (veya siyah) bir mum ise kapanışın açılıştan düşük olduğunu (fiyatın düştüğünü) gösterir.<span class="kaynak">Kaynak: getmidas.com</span></p>
+        <p>Mumun üstündeki ve altındaki ince çizgiler (fitiller veya gölgeler), o periyottaki en yüksek ve en düşük fiyat seviyelerini işaret eder.<span class="kaynak">Kaynak: getmidas.com</span></p>
+        <p><em>Örnek:</em> Bir hisse senedi sabah 100 TL'den açılıp gün içinde 110 TL'ye kadar yükselmiş, sonra 95 TL'ye düşmüş ve 105 TL'den kapanmışsa, o günün mumu yeşil olacaktır (çünkü kapanış açılıştan yüksek) ve fitilleri 110 (üst) ile 95 (alt) seviyelerini gösterir. Bu basit görsel temsil sayesinde mum grafikleri, fiyat hareketlerinin "hikâyesini" tek bir mum çubuğunda anlatır ve piyasanın o andaki psikolojisini yansıtır.</p>
+        <div class="placeholder">[Buraya basit bir mum grafik temsili görseli gelecek]</div>
+    </div>
+
+    <div class="modul">
+        <h2>Hareketli Ortalamalar (MA50 ve MA200)</h2>
+        <p>Hareketli ortalama (Moving Average, MA), fiyatlardaki dalgalanmayı yumuşatarak genel trendi görmemizi sağlayan basit bir göstergedir. Belirli bir periyottaki kapanış fiyatlarının ortalamasını alır ve her gün (veya her bar) yeni veri geldikçe güncellenir. Örneğin, 50 günlük MA (MA50) son 50 günün ortalama fiyatını gösterir; 200 günlük MA (MA200) ise son 200 günün ortalamasını gösterir.<span class="kaynak">Kaynak: tr.cointelegraph.com</span></p>
+        <p>Kısa periyotlu bir MA (ör. 50 günlük), fiyattaki değişimlere daha çabuk tepki verir; uzun periyotlu bir MA (ör. 200 günlük) ise daha yavaş tepki verir ve daha genel bir trendi yansıtır.<span class="kaynak">Kaynak: tr.cointelegraph.com</span></p>
+        <p>Bu nedenle MA50 genelde orta vadeli trendi, MA200 ise uzun vadeli ana trendi takip etmek için kullanılır.</p>
+        <p><strong>Şekil 2:</strong> Günlük grafikte turuncu çizgi 50 günlük MA, kırmızı çizgi 200 günlük MA'yı göstermektedir. Turuncu (MA50) kırmızıyı (MA200) yukarı kesince Golden Cross (Altın Kesişim), aşağı kesince Death Cross (Ölüm Kesişimi) oluşur. Bu kesişimler güçlü trend değişimi sinyalleri olarak yorumlanır. Hareketli ortalamalar, trend yönünü anlamaya yardımcı olur. Örneğin fiyat uzun süre MA200'ün üstünde kalıyorsa genel olarak yükseliş trendinde (boğa piyasası) olduğunu, sürekli MA200'ün altında ise düşüş trendinde (ayı piyasası) olduğunu gösterir.<span class="kaynak">Kaynak: pratikteknikanaliz.com</span></p>
+        <p>Yatırımcılar sıkça MA50 ile MA200'ü birlikte izler: MA50, MA200'ü aşağıdan yukarı keserse buna "golden cross" denir ve genellikle güçlü bir yükseliş sinyali kabul edilir; tersine MA50 yukarıdan aşağı keserse "death cross" adını alır ve düşüş sinyali olarak görülür.<span class="kaynak">Kaynak: pratikteknikanaliz.com</span></p>
+        <p>Bu kesişimler, kısa vadeli trendin uzun vadeli trendi yakaladığını veya aştığını gösterdiğinden önemli kabul edilir. Ancak unutmayın, hareketli ortalamalar gecikmeli göstergelerdir; bu sinyaller çoğu zaman trend başladıktan sonra gelir. Yine de, destek-direnç seviyeleriyle birlikte kullanıldığında MA50 ve MA200, fiyatın kritik seviyelerini ve olası dönüş noktalarını anlamakta çok değerli araçlardır.</p>
+        <div class="placeholder">[Buraya MA50 ve MA200 içeren bir grafik örneği gelecek]</div>
+    </div>
+
+    <div class="modul">
+        <h2>RSI (Göreceli Güç Endeksi)</h2>
+        <p>RSI, Relative Strength Index (Göreceli Güç Endeksi) teriminin kısaltmasıdır ve fiyat hareketlerinin hızını ve değişimin büyüklüğünü ölçen bir momentum osilatörüdür.<span class="kaynak">Kaynak: alnusyatirim.com</span> 0 ile 100 arasında bir değer alır ve bir finansal varlığın aşırı alım veya aşırı satım bölgesinde olup olmadığını gösterir.<span class="kaynak">Kaynak: alnusyatirim.com</span></p>
+        <p>RSI genellikle 14 periyot üzerinden hesaplanır ve yatırımcılar tarafından piyasadaki momentumun gücünü anlamak için kullanılır. RSI değeri 70'in üzerindeyse ilgili enstrümanın "aşırı alım" bölgesinde olduğu düşünülür; yani fiyatın çok hızlı yükselmiş ve yakında bir düzeltme yapma olasılığının arttığı kabul edilir.<span class="kaynak">Kaynak: alnusyatirim.com</span></p>
+        <p>Tam tersine, RSI 30'un altındaysa varlık "aşırı satım" bölgesindedir; fiyatın çok düşmüş olabileceği ve yakında yukarı yönlü bir tepki gelebileceği anlamına gelir.<span class="kaynak">Kaynak: alnusyatirim.com</span></p>
+        <p><em>Not:</em> Tek başına RSI veya başka bir indikatör kesin sinyal vermez; bu tip göstergeler, destek-direnç analizleri ve genel trend yapısıyla birlikte değerlendirilmelidir.</p>
+        <div class="placeholder">[Buraya RSI göstergesi örnek grafiği gelecek]</div>
+    </div>
+
+    <div class="modul">
+        <h2>MACD (Hareketli Ortalama Yakınsama/Ayrışması)</h2>
+        <p>MACD, Moving Average Convergence Divergence ifadesinin kısaltması olup, hareketli ortalamaların yakınsaması ve ayrışması prensibine dayanan popüler bir teknik göstergedir. Basitçe söylemek gerekirse MACD, kısa vadeli ve uzun vadeli iki üssel hareketli ortalama arasındaki ilişkiyi takip ederek trendin yönünü ve momentumunu anlamaya yarar.<span class="kaynak">Kaynak: qnbinvest.com.tr</span></p>
+        <p>Genellikle 12 günlük EMA ile 26 günlük EMA arasındaki fark alınarak MACD değeri hesaplanır.<span class="kaynak">Kaynak: qnbinvest.com.tr</span> Bu fark (MACD çizgisi), fiyatın kısa vadede uzun vadeye göre ne kadar hızlı yükselip düştüğünü gösterir. Ayrıca MACD göstergesinde bir sinyal çizgisi bulunur; bu da MACD çizgisinin 9 günlük üssel ortalamasıdır ve alım-satım sinyalleri için tetikleyici olarak kullanılır.<span class="kaynak">Kaynak: qnbinvest.com.tr</span></p>
+        <p>MACD'nin temel kullanım amacı, mevcut trendin gücünü ve olası değişimlerini tespit etmektir. Özellikle kesişmeler önemli sinyaller verir: MACD ana çizgisi, sinyal çizgisini yukarı yönde kestiğinde genellikle alış (pozitif) sinyali olarak yorumlanır; yani kısa vadeli momentumun güçlendiği ve yükselişin devam edebileceği düşünülür. MACD çizgisi sinyalin altına düştüğünde ise satış (negatif) sinyali oluşur; bu durum momentumun zayıfladığını ve düşüş olasılığının arttığını gösterir.<span class="kaynak">Kaynak: qnbinvest.com.tr</span></p>
+        <p>Çoğu yatırımcı yanlış sinyalleri filtrelemek için MACD kesişmesinin net bir şekilde gerçekleşmesini (örneğin sıfır çizgisinin de geçilmesini) bekler.<span class="kaynak">Kaynak: qnbinvest.com.tr</span> MACD yorumlanırken ayrıca sıfır çizgisine de dikkat edilir: MACD değeri sıfırın üzerindeyse kısa vadeli EMA, uzun vadeli EMA'nın üzerindedir, yani yukarı yönlü trend baskın demektir; sıfırın altındaysa tam tersi, aşağı yönlü trendin baskın olduğu kabul edilir.<span class="kaynak">Kaynak: qnbinvest.com.tr</span></p>
+        <p><em>Örnek:</em> Bir hisse senedinde MACD uzun süre sıfırın üzerinde pozitif seyrediyorsa yükseliş trendinin güçlü olduğunu, ancak MACD zirve yapıp aşağı dönmeye başlarsa yükseliş hızının azalabileceğini anlarız. Alım ve satım sinyalleri çoğunlukla MACD çizgisinin sinyal çizgisini kestiği anlarda veya MACD histogramının (MACD-sinyal farkını çubuklar halinde gösterir) yön değiştirmeye başladığı noktalarda üretilir. MACD indikatörü de diğer göstergeler gibi tek başına kullanılmamalı, fiyat trendi, hacim ve RSI gibi diğer verilerle birlikte değerlendirilmelidir.</p>
+        <div class="placeholder">[Buraya MACD göstergesi örnek grafiği gelecek]</div>
+    </div>
+
+    <div class="modul">
+        <h2>Sonuç</h2>
+        <p>Teknik analizdeki bu temel grafik ve göstergeler, ilk etapta karmaşık görünse de, pratik yaptıkça piyasa hareketlerini daha net okumanızı sağlar. Mum grafikleri sayesinde fiyatların günlük "hikâyelerini" okuyabilir, hareketli ortalamalarla trendin yönünü ve gücünü süzgeçten geçirebilir, RSI ile piyasadaki alış/satış baskısının dozunu ölçebilir ve MACD ile trend dönüş sinyallerini yakalayabilirsiniz. Unutmayın, grafikler korkutucu olmak zorunda değil – tam tersine, doğru yorumlandıklarında karmaşık piyasa verilerini anlaşılır hale getirerek güçlü sinyaller sunarlar. Artık bu temel araçlarla donanmış olarak, grafiklere baktığınızda neyin ne anlama geldiğini daha iyi görebilecek ve teknik analizin dünyasına ilk adımınızı daha özgüvenle atabileceksiniz.</p>
+    </div>
+</body>
+</html> 

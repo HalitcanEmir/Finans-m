@@ -853,6 +853,9 @@ def egitim_modul2(request):
 def egitim_modul3(request):
     return render(request, 'egitim_modul3.html')
 
+def egitim_modul4(request):
+    return render(request, 'egitim_modul4.html')
+
 def yatirimcilar(request):
     return render(request, 'yatirimcilar.html')
 
@@ -880,3 +883,6 @@ def chatbot(request):
         except Exception as e:
             return JsonResponse({"response": f"Hata: {str(e)}"})
     return render(request, "chatbot.html")
+
+def sende_basla(request):
+    return render(request, 'sende_basla.html')
