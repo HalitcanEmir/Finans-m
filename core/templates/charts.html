@@ -52,7 +52,39 @@
         }
         .data-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
         .card { background: #f8fafd; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 18px; min-width: 120px; text-align: center; box-shadow: 0 1px 4px #0001; }
+        .bilgi-karti {
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .gizli {
+            display: none;
+        }
+        .bilgi-btn {
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-left: 6px;
+        }
     </style>
+    <script>
+    function gosterAcilirBilgi(id) {
+        var kutu = document.getElementById(id + '-bilgi');
+        if (kutu.classList.contains('gizli')) {
+            kutu.classList.remove('gizli');
+        } else {
+            kutu.classList.add('gizli');
+        }
+    }
+    </script>
 </head>
 <body>
     <h1>Hisse Sorgulama</h1>
@@ -93,7 +125,22 @@
 
     {% if ma_chart %}
     <div class="chart-container">
-        <h3>{{ sembol }} - MA50 & MA200 Hareketli Ortalamalar</h3>
+        <h3>{{ sembol }} - MA50 & MA200 Hareketli Ortalamalar
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('ma')" title="MA50 & MA200 nedir?">ℹ️</button>
+        </h3>
+        <div id="ma-bilgi" class="bilgi-karti gizli">
+            <b>📌 Bu gösterge nedir ve ne işe yarar?</b><br>
+            Hareketli Ortalamalar (Moving Averages), belirli bir dönem boyunca finansal varlığın ortalama fiyatını gösteren ve trend takibinde kullanılan temel teknik göstergelerdir. Özellikle 50 günlük ve 200 günlük basit hareketli ortalamalar, kısa ve uzun vadeli trendin belirlenmesinde yaygın olarak kullanılır.<br><br>
+            <b>🔍 Yatırımcıya ne söyler? Nasıl yorumlanır?</b><br>
+            - <b>Trend Yönü:</b> 50 günlük ortalamanın yukarı eğimli olması hissede orta vadede yükseliş trendini, aşağı eğimli olması düşüş trendini gösterir. 200 günlük ortalama ise uzun vadeli genel trendi yansıtır.<br>
+            - <b>Destek/Direnç:</b> Hareketli ortalama çizgileri dinamik destek ve direnç seviyeleri gibi davranabilir. Fiyat, yükseliş trendinde genellikle 50 günlük ortalama civarında destek bulurken; düşüş trendinde 50 veya 200 günlük ortalama direnç olarak çalışabilir.<br>
+            - <b>Altın Kesişim & Ölüm Kesişimi:</b> 50 günlük ortalamanın 200 günlük ortalamayı aşağıdan yukarı kesmesi "Altın Kesişim" olarak adlandırılır ve güçlü bir yükseliş (boğa) sinyali olarak yorumlanır. Tersi durumda, yani 50 günlüğün 200 günlüğü yukarıdan aşağı kesmesi "Ölüm Kesişimi" olarak adlandırılır ve düşüş trendi uyarısı kabul edilir.<br><br>
+            <b>🧮 Temel hesaplama / teknik bilgi:</b><br>
+            - MA50: Son 50 günün kapanış fiyatlarının ortalaması<br>
+            - MA200: Son 200 günün kapanış fiyatlarının ortalaması<br>
+            Hareketli ortalamalar gecikmeli (lagging) göstergelerdir; yeni fiyat hareketlerini biraz arkadan takip ederler. Ancak uzun vadeli trendi ve momentum değişimlerini doğrulamada etkilidirler. Genellikle diğer indikatörlerle birlikte kullanılır.<br>
+            <i>Özetle, MA50 ve MA200 grafik üzerinde kesişen iki çizgi olarak görülür ve kesişim durumları ile eğimleri, ilgili hisse senedinin genel trend yönü ve gücü hakkında önemli ipuçları verir.</i>
+        </div>
         <img src="data:image/png;base64,{{ ma_chart }}" alt="MA50 ve MA200">
         <div style="font-size:13px; color:#555;">
             Mavi: Kapanış Fiyatı<br>
@@ -104,31 +151,106 @@
     {% endif %}
 
     <div class="chart-container">
-        <h2>{{ sembol }} - RSI (Relative Strength Index) Grafiği</h2>
+        <h2>{{ sembol }} - RSI (Relative Strength Index) Grafiği
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('rsi')" title="RSI nedir?">ℹ️</button>
+        </h2>
+        <div id="rsi-bilgi" class="bilgi-karti gizli">
+            <b>📌 Bu gösterge nedir ve ne işe yarar?</b><br>
+            RSI (Göreceli Güç Endeksi), bir finansal aracın son fiyat değişimlerinin hızını ve büyüklüğünü ölçen popüler bir momentum osilatörüdür. 0 ile 100 arasında değer alan RSI, fiyatın belirli bir zaman dilimindeki yükseliş ve düşüş oranlarını kıyaslayarak aşırı alım veya aşırı satım sinyalleri üretir. Genellikle 14 dönemlik RSI kullanılır.<br><br>
+            <b>🔍 Yatırımcıya ne söyler? Nasıl yorumlanır?</b><br>
+            - <b>Aşırı Alım (Overbought):</b> RSI değeri ~70 seviyesinin üzerindeyse varlık fiyatının kısa vadede çok hızlı yükseldiği, olası bir düzeltmenin yaklaştığı düşünülür. Bu bölge, aşırı alım bölgesi olarak adlandırılır. Örneğin RSI 70'i aştığında birçok yatırımcı bunu satış için uyarı sinyali kabul edebilir.<br>
+            - <b>Aşırı Satım (Oversold):</b> RSI ~30 seviyesinin altına inmişse fiyatın çok düşmüş ve satışların abartılı olabileceği anlaşılır. Burası aşırı satım bölgesidir. RSI 30 altına gerilediğinde, varlığın değerinin düşerken aşırıya kaçtığı düşünülebilir ve bu seviyelerde alım fırsatları kollanır.<br>
+            - <b>Orta Bölge:</b> RSI genellikle 30-70 bandı arasında dalgalanır. Orta değerler (50 civarı), belirgin bir aşırı alım/satım durumu olmadığını gösterir ve trendin yönüne bağlı olarak yorumlanır. Yükselen trendde 40-50 bölgesi destek olarak çalışabilirken, düşen trendde 50-60 bölgesi direnç olarak izlenebilir.<br>
+            - <b>Uyumsuzluklar (Divergence):</b> Fiyat hareketi ile RSI arasındaki uyumsuzluklar önemli uyarılar verir. Örneğin, fiyat daha düşük dipler yaparken RSI yükselen dipler yapıyorsa pozitif uyumsuzluk söz konusudur ve düşüş momentumunun zayıfladığı, yakında trendin yukarı dönebileceği anlamına gelebilir. Tam tersi, fiyat yükselirken RSI düşüyorsa bu negatif uyumsuzluk olarak adlandırılır ve yükseliş gücünün zayıfladığına işaret eder.<br><br>
+            <b>🧮 Temel hesaplama / teknik bilgi:</b><br>
+            RSI = 100 - (100 / (1 + RS)), burada RS son 14 gündeki ortalama yükselişin ortalama düşüşe oranıdır.<br>
+            <i>Özetle RSI göstergesi, momentumun gücünü ve olası dönüş noktalarını gösterir. Tek başına kullanıldığında zaman zaman yanlış sinyal üretebileceği için, diğer göstergelerle (örneğin MACD veya Bollinger Bantları) birlikte değerlendirilmesi tavsiye edilir. RSI grafiğine bakarak bir hissenin aşırı değerlenip değerlenmediğini veya mevcut trend momentumunu hızlıca yorumlayabilirsiniz.</i>
+        </div>
         {% if rsi_grafik %}
             <img src="data:image/png;base64,{{ rsi_grafik }}" alt="RSI Grafiği">
         {% else %}
             <p>RSI grafiği verisi alınamadı.</p>
         {% endif %}
     </div>
+
     <div class="chart-container">
-        <h2>{{ sembol }} - MACD (Moving Average Convergence Divergence) Grafiği</h2>
+        <h2>{{ sembol }} - MACD (Moving Average Convergence Divergence) Grafiği
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('macd')" title="MACD nedir?">ℹ️</button>
+        </h2>
+        <div id="macd-bilgi" class="bilgi-karti gizli">
+            <b>📌 Bu gösterge nedir ve ne işe yarar?</b><br>
+            MACD (Hareketli Ortalama Yakınsama/Iraksama), trendin yönünü ve momentumun değişimini gösteren, iki hareketli ortalama arasındaki ilişkiye dayalı bir göstergedir. Hem trend takibi hem de momentum ölçümü yaptığı için yatırımcılar arasında çok yaygın kullanılır.<br><br>
+            <b>🔎 Temel Bileşenler:</b><br>
+            <ul>
+                <li><b>MACD Çizgisi:</b> Genellikle 12 dönemlik üssel hareketli ortalama (EMA) ile 26 dönemlik EMA arasındaki farktan hesaplanır. Bu çizgi, kısa vadeli fiyat trendinin uzun vadeli trende göre ne durumda olduğunu gösterir. MACD çizgisinin pozitif değerde olması (sıfır çizgisinin üstünde), kısa vadeli trendin uzun vadeli trende göre yukarıda olduğu anlamına gelir (yani yükseliş momentumu vardır); negatif olması ise kısa trendin uzun trende göre aşağıda kaldığını, düşüş momentumu olduğunu gösterir.</li>
+                <li><b>Sinyal Çizgisi:</b> MACD çizgisinin 9 dönemlik üssel ortalamasıdır. MACD çizgisi ile bu sinyal çizgisinin kesişimleri, alım-satım sinyali olarak yorumlanır. Örneğin MACD çizgisi sinyal çizgisini aşağıdan yukarı kestiğinde bu genelde alıma işaret eder; tersi şekilde yukarıdan aşağı kestiğinde satış sinyali üretebilir. Bu kesişimlerin güvenilirliği, MACD'nin konumuna göre de değerlendirilir: Sıfır çizgisinin üzerinde gerçekleşen bir "aşağı kesişim" zayıflayan bir yükselişi gösterirken, sıfırın altındaki "yukarı kesişim" henüz çok güçlü olmayan bir toparlanma sinyali olabilir.</li>
+                <li><b>Histogram:</b> MACD çizgisi ile sinyal çizgisi arasındaki farkı grafik şeklinde gösteren çubuklardır. Histogramın pozitif olması MACD çizgisinin sinyalin üzerinde olduğuna (yükseliş momentumu), negatif olması ise altında kaldığına (düşüş momentumu) işaret eder. Histogram barlarının büyümesi iki çizgi arasındaki farkın açıldığını, daralması ise farkın azaldığını gösterir; bu da momentum değişimlerine dair erken bir uyarı olabilir.</li>
+            </ul>
+            <b>📈 MACD grafiği nasıl yorumlanır?</b><br>
+            Temel olarak üç önemli sinyal vardır:
+            <ul>
+                <li><b>Çizgi Kesişimleri:</b> MACD-sinyal kesişimleri en yaygın alım/satım sinyalleridir. Ancak her kesişimin doğru çıkmayabileceğini unutmamak gerekir, özellikle yatay seyir (trend olmayan piyasa) dönemlerinde yanıltıcı çok sayıda kesişim olabilir.</li>
+                <li><b>Sıfır Çizgisi Geçişleri:</b> MACD çizgisinin sıfır değerini aşması trend yönünde önemli değişim sinyalidir. Sıfırın üzeri piyasada alış baskının hakim olduğunu, altı ise satış baskısının ağır bastığını gösterir. Bu nedenle MACD'nin uzun süre sonra yeniden sıfır çizgisini geçmesi, trend başlangıcı olarak yorumlanabilir.</li>
+                <li><b>Diverjans (Uyumsuzluk):</b> MACD çizgisinin fiyat hareketiyle uyumsuz hareket etmesi de dikkate alınır. Örneğin fiyat yeni zirveler yaparken MACD daha düşük zirveler yapıyorsa bu negatif diverjans olup trendin güç kaybettiğine ve düşüşün gelebileceğine işarettir. Aksi durum pozitif diverjans olarak, düşen fiyata rağmen MACD'nin yükseliş sinyalleri vermesi şeklinde görülür ve yaklaşan toparlanmaya dair ipucu sayılır.</li>
+            </ul>
+            <b>🧑‍🔬 Tarihçe ve Kullanım:</b><br>
+            MACD, Gerald Appel tarafından 1970'lerde geliştirilmiş ve günümüzde en güvenilen teknik göstergelerden biri haline gelmiştir. Tek başına bir "kesin" al-sat sistemi olmaktan ziyade, diğer indikatörlerle birlikte trend gücünü onaylamak için kullanılır. MACD grafiği, yatırımcıya hem trend yönünü hem de momentum değişimini tek bakışta sunmasıyla, hisse analiz sayfanızdaki en değerli araçlardan biridir.
+        </div>
         {% if macd_grafik %}
             <img src="data:image/png;base64,{{ macd_grafik }}" alt="MACD Grafiği">
         {% else %}
             <p>MACD grafiği verisi alınamadı.</p>
         {% endif %}
     </div>
+
     <div class="chart-container">
-        <h2>{{ sembol }} - Bollinger Bantları</h2>
+        <h2>{{ sembol }} - Bollinger Bantları
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('bollinger')" title="Bollinger Bantları nedir?">ℹ️</button>
+        </h2>
+        <div id="bollinger-bilgi" class="bilgi-karti gizli">
+            <b>📌 Bu gösterge nedir ve ne işe yarar?</b><br>
+            Bollinger Bantları, John Bollinger tarafından 1980'lerde geliştirilmiş, fiyatların oynaklığını (volatilitesini) ve göreli yüksek/düşük seviyelerini anlamaya yardımcı olan bir teknik analiz aracıdır. Grafikte orta, üst ve alt bant olmak üzere üç eğri şeklinde görünür:<br><br>
+            <b>🔎 Temel Bileşenler:</b><br>
+            <ul>
+                <li><b>Orta Bant:</b> Genellikle 20 günlük basit hareketli ortalamadır (fiyatın son 20 günkü ortalaması). Fiyatın genel trend yönünü takip eder.</li>
+                <li><b>Üst Bant:</b> 20 günlük ortalamaya, fiyatın standart sapmasının genelde 2 katı eklenerek hesaplanır.</li>
+                <li><b>Alt Bant:</b> 20 günlük ortalamadan, 2 standart sapma çıkarılarak hesaplanır.</li>
+            </ul>
+            Bu şekilde üst ve alt bantlar, fiyatın son dönemdeki dalgalanma aralığını belirler. Bantlar arasındaki mesafe, piyasanın volatilitesine bağlı olarak değişir:<br><br>
+            <b>📈 Volatilite ve Bant Genişliği:</b><br>
+            Bantlar genişliyorsa piyasanın oynaklığı artmıştır, fiyat hareketleri daha dalgalıdır. Bantların daralması ise volatilitenin azaldığını gösterir. Özellikle uzun süre dar kalan (sıkışan) bantlar, genellikle yaklaşan güçlü bir fiyat hareketinin habercisi olabilir (bantlar tekrar açılmaya başladığında kırılma yönünde sert hareketler görülebilir).<br><br>
+            <b>⚠️ Aşırı Fiyatlar:</b><br>
+            Fiyatın üst bandın üzerine çıkması, o anki fiyatın son ortalamalara göre oldukça yüksek olduğunu, yani varlığın kısa vadede aşırı satın alınmış olabileceğini gösterir. Tersi şekilde, alt bandın altına sarkması fiyatın son seviye olarak çok düşük (aşırı satım) olduğunu gösterir. Ancak bant dışına çıkan fiyat hareketleri her zaman hemen ters dönmez; bazen güçlü trendlerde fiyat uzun süre üst banda yapışık şekilde yükselebilir veya alt banda yakın düşebilir. Bu yüzden bant dışına taşmaları otomatik al-sat sinyali olarak görmek doğru değildir.<br><br>
+            <b>🛡️ Destek ve Direnç Olarak Bantlar:</b><br>
+            Fiyat genellikle zamanın %90'ında bantların içinde hareket eder. Üst band, yükselişlerde direnç; alt band, düşüşlerde destek görevi görebilir. Örneğin fiyat üst banda birkaç kez dokunup geçemeden geri dönüyorsa, üst bandın bulunduğu seviye güçlü bir direnç olarak kabul edilir. Aynı şekilde alt bantta tepkiler geliyorsa, o seviye destek görevindedir.<br><br>
+            <b>💡 Yorum ve Strateji:</b><br>
+            Bollinger Bantları grafiği, yatırımcılara mevcut fiyatın göreli olarak yüksek mi düşük mü olduğunu ve piyasanın durgun mu yoksa hareketli mi seyrettiğini hızlıca gösterir. Bantların durumu, işlem stratejilerinde uyarı veya teyit aracı olarak kullanılır. Örneğin bantlar çok genişse yatırımcı temkinli olabilir (yüksek volatilite riskini görür); bantlar daralırken ise büyük bir kırılma hareketine hazırlıklı olur. Unutulmamalıdır ki Bollinger Bantları da tek başına yeterli değildir ve RSI, MACD gibi diğer göstergelerle beraber yorumlanması tavsiye edilir.
+        </div>
         {% if bollinger_grafik %}
             <img src="data:image/png;base64,{{ bollinger_grafik }}" alt="Bollinger Bantları Grafiği">
         {% else %}
             <p>Bollinger Bantları grafiği verisi alınamadı.</p>
         {% endif %}
     </div>
+
     <div class="chart-container">
-        <h2>{{ sembol }} - ADX Göstergesi (Trend Gücü)</h2>
+        <h2>{{ sembol }} - ADX Göstergesi (Trend Gücü)
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('adx')" title="ADX nedir?">ℹ️</button>
+        </h2>
+        <div id="adx-bilgi" class="bilgi-karti gizli">
+            <b>📌 Bu gösterge nedir ve ne işe yarar?</b><br>
+            ADX (Average Directional Index) göstergesi, bir finansal enstrümanın trend gücünü ölçmek için kullanılır. J. Welles Wilder'ın geliştirdiği ADX, 0 ile 100 arasında değer alan bir osilatördür. Bu göstergenin en önemli özelliği, trendin yönünden bağımsız olarak sadece ne kadar güçlü olduğunu göstermesidir. Yani ADX değeri yükseliyorsa trend (ister yükseliş olsun ister düşüş) güçleniyor demektir, ADX düşüyorsa trend zayıflıyor anlamına gelir.<br><br>
+            <b>🔎 Temel Bileşenler:</b><br>
+            ADX grafiğinde tipik olarak üç çizgi bulunur: ADX çizgisi, +DI (pozitif yön göstergesi) ve -DI (negatif yön göstergesi). +DI ve -DI çizgileri fiyatın yukarı veya aşağı yönlü hareketinin gücünü gösterirken, ADX çizgisi bunların birleşiminden trendin toplam gücünü yansıtır.<br><br>
+            <b>📈 ADX göstergesi nasıl yorumlanır?</b><br>
+            <ul>
+                <li><b>ADX Değerinin Seviyeleri:</b> Genellikle ADX 20'nin altında ise trend olmadığı veya çok zayıf bir trend olduğu kabul edilir (fiyat dalgalı yatay bir seyir izliyor olabilir). 25 değerinin üzerine çıkması trendin güç kazandığına işaret eder. Örneğin ADX 30-40 seviyelerine ulaşmışsa artık belirgin ve güçlü bir trend var demektir. 40'ın üzerindeki ADX değerleri ise son derece kuvvetli bir trendi gösterir ancak bu denli yüksek değerler ender görülür ve genellikle trendin zirve yapmaya yaklaştığını da gösterebilir.</li>
+                <li><b>Trend Yönü için DI Çizgileri:</b> ADX'in kendisi trend yönünü söylemez, sadece gücünü söyler. Yön bilgisini aynı paneldeki +DI ve -DI çizgileri verir. +DI, -DI'nin üzerinde ise trend yönü yukarı (alıcılar daha güçlü); -DI, +DI'nin üzerinde ise trend yönü aşağı (satıcılar daha güçlü) demektir. Bu iki çizginin kesişimleri de trend yön değişim sinyali sayılır: +DI çizgisinin -DI'yi yukarı kesmesi yükseliş sinyali, -DI'nin +DI'yi yukarı kesmesi düşüş sinyalidir.</li>
+                <li><b>Trend Devamı veya Bitimi:</b> Yüksek bir ADX değeri, mevcut trendin kararlılıkla devam ettiğini gösterir. Ancak çok yüksek seviyelerden ADX'in düşmeye başlaması, trendin momentum kaybettiğine ve piyasanın konsolidasyona girebileceğine dair bir uyarıdır. Örneğin ADX 50'ye ulaşıp geri gevşemeye başlarsa, mevcut yükseliş/düşüş trendinin hızının düşebileceği düşünülür.</li>
+            </ul>
+            <b>💡 Yorum ve Strateji:</b><br>
+            Kısaca ADX göstergesi, trend var mı yok mu, varsa ne kadar güçlü sorularının cevabını verir. Hisse analiz sayfanızda ADX grafiği sayesinde, ilgili hissenin belirgin bir trend içinde olup olmadığını anlayabilir; eğer güçlü bir trend varsa buna uygun strateji geliştirebilirsiniz. Yatay piyasada (ADX düşükken) farklı, trend piyasasında (ADX yüksekken) farklı yaklaşımlar gerektiği için ADX, trend takibinde kritik bir tamamlayıcı gösterge olarak değerlidir.
+        </div>
         {% if adx_grafik %}
             <img src="data:image/png;base64,{{ adx_grafik }}" alt="ADX Grafiği">
         {% else %}
@@ -137,7 +259,22 @@
     </div>
     {% if temettu_grafik %}
     <div class="chart-container">
-        <h2>{{ sembol }} - Temettü Tarihçesi</h2>
+        <h2>{{ sembol }} - Temettü Tarihçesi
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('temettu')" title="Temettü nedir?">ℹ️</button>
+        </h2>
+        <div id="temettu-bilgi" class="bilgi-karti gizli">
+            <b>📌 Temettü nedir?</b><br>
+            Temettü (kar payı), bir şirketin elde ettiği kârın belli bir kısmını dönem sonunda hissedarlarına dağıtmasıdır. Temettü Tarihçesi grafiği, ilgili şirketin geçmiş yıllarda ne zaman ve ne kadar temettü ödediğini görsel olarak sunar. Bu grafik genellikle yıllara veya dağıtım dönemlerine göre şirketin hisse başına ödediği temettü tutarlarını gösterir.<br><br>
+            <b>🔎 Yatırımcı için önemi:</b><br>
+            <ul>
+                <li><b>Şirketin Finansal Sağlığı ve İstikrarı:</b> Düzenli ve artan miktarlarda temettü ödeyen şirketler genelde finansal açıdan güçlü ve istikrarlı olarak kabul edilir. Sürekli kâr edip hissedarlarına pay dağıtabilen bir şirketin nakit akışının sağlıklı olduğu ve yönetimin yatırımcı dostu bir politika izlediği düşünülebilir.</li>
+                <li><b>Uzun Vadeli Gelir Potansiyeli:</b> Temettüler, hisse fiyatından bağımsız olarak yatırımcılara düzenli nakit getirisi sağlar. Özellikle uzun vadeli yatırımcılar için temettü geliri, toplam getirinin önemli bir parçası olabilir. Temettü tarihçesi güçlü (örneğin her yıl aksatmadan temettü ödeyen) şirketler, uzun vadede yatırımcısına düzenli gelir akışı sunar.</li>
+                <li><b>Büyüme ve Performans Göstergesi:</b> Zaman içinde artan temettü ödemeleri, şirketin kârlarının büyüdüğüne ve yönetimin bu büyümeyi hissedarlarla paylaştığına işaret eder. Örneğin grafikte temettü tutarlarının yıllar içinde yükseldiğini görmek olumlu bir göstergedir. Aksine, kesintiye uğrayan veya azalan temettüler ise şirketin zor dönemler geçirdiğine veya kârını başka alanlara yönlendirdiğine işaret edebilir.</li>
+            </ul>
+            <b>💡 Nasıl Yorumlanır?</b><br>
+            Temettü tarihçesi grafiğine bakarak bir yatırımcı, şirketin kâr dağıtma geçmişini tek bakışta değerlendirebilir. Örneğin son 5 yılda her yıl temettü ödeyip ödemediği, temettü veriminin (oranının) yaklaşık ne seviyelerde olduğu gibi bilgiler elde edilebilir. Bu grafik, temettü odaklı yatırım stratejisi güden kullanıcılar için özellikle faydalıdır.<br><br>
+            <i>Not: Geçmiş temettü ödemeleri gelecekte de aynı şekilde devam edeceğinin garantisi değildir; ancak geçmiş performans, şirketin temettü kültürü hakkında değerli bir fikir verir.</i>
+        </div>
         <img src="data:image/png;base64,{{ temettu_grafik }}" alt="Temettü Grafiği">
     </div>
     {% endif %}
@@ -148,7 +285,29 @@
     </div>
     {% endif %}
     <div class="chart-container">
-        <h2>{{ sembol }} - Mum Grafiği (Candlestick) (Entegre Fonksiyon)</h2>
+        <h2>{{ sembol }} - Mum Grafiği (Candlestick)
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('candlestick')" title="Mum Grafiği nedir?">ℹ️</button>
+        </h2>
+        <div id="candlestick-bilgi" class="bilgi-karti gizli">
+            <b>📌 Mum Grafiği nedir?</b><br>
+            Mum grafikleri (Candlestick charts), finansal bir enstrümanın belirli bir zaman dilimindeki açılış, kapanış, en yüksek ve en düşük fiyatlarını tek bir sembolle gösteren popüler bir fiyat grafiği türüdür. Her mum (çubuk), seçilen zaman aralığını (örneğin 1 gün, 1 saat veya 15 dakika) temsil eder ve o periyotta fiyatın nasıl hareket ettiğine dair zengin bilgi içerir.<br><br>
+            <b>🔎 Mum Grafiğinin Yapısı:</b><br>
+            <ul>
+                <li><b>Gövde (Body):</b> Mumun dikdörtgen gövdesi, ilgili periyodun açılış ve kapanış fiyatları arasındaki farkı gösterir. Gövde yeşil (veya beyaz) renkte ise kapanış fiyatı, açılışın üzerindedir (fiyat o periyotta yükselmiş demektir); kırmızı (veya siyah) ise kapanış, açılışın altındadır (fiyat düşmüştür). Gövdenin uzunluğu, fiyatın o dönemde ne kadar hareket ettiğini gösterir.</li>
+                <li><b>Fitiller (Gölgeler):</b> Mum gövdesinin üstünde ve altında çizgi şeklinde uzanan fitil veya gölge kısmı, periyot içindeki en yüksek ve en düşük fiyat seviyelerini gösterir. Üst fitilin uzunluğu, o dönemde ne kadar yukarı seviyelerin test edildiğini; alt fitilin uzunluğu ise ne kadar aşağı düşüş yaşandığını anlatır.</li>
+            </ul>
+            <b>📈 Trend ve Hızlı Okunabilirlik:</b><br>
+            Mum grafikleri, aynı anda hem trend yönünü hem de volatiliteyi yansıttığı için teknik analizde çok tercih edilir. Bir bakışta arka arkaya gelen yeşil mumlar yükseliş trendini, kırmızı mumlar düşüş trendini gösterir. Gövde ve fitil boyutları ise hareketin gücü hakkında ipucu verir (örneğin çok uzun bir gövde güçlü bir fiyat hareketini, uzun fitiller ise yüksek volatilite ve piyasa kararsızlığını işaret edebilir).<br><br>
+            <b>🎯 Önemli Formasyonlar:</b><br>
+            <ul>
+                <li><b>Çekiç (Hammer):</b> Uzun alt fitilli bir yeşil/kırmızı mum olup düşüş trendinin sonunda görülürse olası bir dip ve yükseliş sinyali sayılır.</li>
+                <li><b>Ters Çekiç (Inverted Hammer):</b> Uzun üst fitilli bir mum olarak yükseliş sonunda tepe sinyali verebilir.</li>
+                <li><b>Diğer Formasyonlar:</b> Doji, Yutan boğa/ayı (engulfing), Yıldız gibi birçok mum formasyonu vardır ve her biri piyasa psikolojisinin izlerini taşır.</li>
+            </ul>
+            <b>💡 Nasıl Yorumlanır?</b><br>
+            Mum grafiği, hisse senedi analizinde en detaylı bilgi sunan grafik türlerinden biridir. Kullanıcılar fareyle üzerine gelerek her mumun açık, yüksek, düşük, kapanış değerlerini görebilir ve grafik üzerinden formasyonları inceleyebilir. Mum grafiklerini okuyarak, fiyatın gün içinde veya seçilen periyotta nereden nereye gittiğini, piyasanın o dönemdeki duygusal durumunu (alışların mı satışların mı baskın olduğunu) anlamak mümkündür.<br><br>
+            <i>Kısaca: Mum grafikleri fiyat hareketinin hikâyesini anlatır ve teknik analizin temel taşlarından biridir.</i>
+        </div>
         {% if candlestick_chart %}
             <img src="data:image/png;base64,{{ candlestick_chart }}" alt="Mum Grafik">
         {% else %}
@@ -156,12 +315,64 @@
         {% endif %}
     </div>
     <div class="chart-container">
-        <h2>{{ sembol }} - Destek ve Direnç Seviyeleri</h2>
+        <h2>{{ sembol }} - Destek ve Direnç Seviyeleri
+            <button class="bilgi-btn" onclick="gosterAcilirBilgi('destek-direnc')" title="Destek ve Direnç Seviyeleri nedir?">ℹ️</button>
+        </h2>
+        <div id="destek-direnc-bilgi" class="bilgi-karti gizli">
+            <b>📌 Destek ve Direnç Seviyeleri Nedir?</b><br>
+            Destek ve direnç seviyeleri, teknik analizde en sık bahsedilen kavramlardır ve bir fiyat grafiğinde belirli seviyelerde alıcı-satıcı dengesinin nasıl değiştiğini gösterir.<br><br>
+            <b>🔵 Destek Seviyesi:</b><br>
+            <ul>
+                <li>Fiyat düşerken karşısına çıkan "zemin" noktalarıdır</li>
+                <li>Geçmişte fiyatın defalarca düşüp durduğu, tepki alımlarıyla karşılaştığı seviyelerdir</li>
+                <li>Alıcıların fiyata ilgi gösterdiği ve düşüşü durdurma eğilimi gösterdiği bölgedir</li>
+                <li>Güçlü satış baskısı durumunda destek kırılabilir ve fiyat bir sonraki destek noktasına doğru düşebilir</li>
+            </ul>
+            <b>🔴 Direnç Seviyesi:</b><br>
+            <ul>
+                <li>Fiyat yükselirken karşılaşılan "tavan" noktalarıdır</li>
+                <li>Geçmişte fiyatın defalarca yükselip geçemeyerek geri çekildiği seviyelerdir</li>
+                <li>Satıcıların ortaya çıktığı ve yükselişi engellediği bölgedir</li>
+                <li>Güçlü alım baskısı durumunda direnç kırılabilir ve eski direnç yeni destek haline gelebilir</li>
+            </ul>
+            <b>📊 Nasıl Belirlenir?</b><br>
+            <ul>
+                <li>Geçmiş fiyat hareketlerinde yoğun işlem gören seviyeler incelenir</li>
+                <li>Grafik üzerinde zirve ve dip noktaları işaretlenir</li>
+                <li>Trend çizgileri ve Fibonacci seviyeleri gibi yöntemler kullanılır</li>
+                <li>Otomatik analiz araçları önemli seviyeleri belirler</li>
+            </ul>
+            <b>💡 Yatırım Stratejisinde Kullanımı:</b><br>
+            <ul>
+                <li>Desteğe yakın alım, dirence yakın satış stratejisi</li>
+                <li>Güçlü direnç kırılması durumunda alım sinyali</li>
+                <li>Kırılan direncin yeni destek olarak kullanılması</li>
+                <li>Stop-loss (zarar kes) seviyelerinin belirlenmesi</li>
+            </ul>
+            <i>Önemli Not: Destek ve direnç seviyeleri, piyasanın hafızasını yansıtır. Geçmişte önemli olmuş fiyat noktaları, gelecekte de önemli olmaya devam eder. Bu seviyeleri bilmek, olası dönüş noktalarını ve riskleri öngörmede yardımcı olur.</i>
+        </div>
         {% if destek_direnc_grafik %}
             <img src="data:image/png;base64,{{ destek_direnc_grafik }}" alt="Destek ve Direnç Grafiği">
         {% else %}
             <p style="color: #b00;">Destek ve direnç grafiği verisi alınamadı.</p>
         {% endif %}
+    </div>
+
+    <div class="chart-container" style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-left: 4px solid #ffc107;">
+        <h2 style="color: #856404;">
+            <span style="margin-right: 8px;">⚠️</span>Önemli Not
+        </h2>
+        <div style="color: #555; line-height: 1.6;">
+            <p><strong>Bu teknik gösterge açıklamaları eğitim amaçlı olarak sunulmuştur.</strong></p>
+            <ul style="margin-top: 15px;">
+                <li>Hiçbir teknik gösterge tek başına kesin sonuç vermez. Yatırım kararları her zaman birden fazla gösterge ve faktör analiz edilerek verilmelidir.</li>
+                <li>Burada sunulan grafikler ve açıklamalar, kullanıcıların finansal verileri daha iyi anlamasına yardımcı olmayı hedefler.</li>
+                <li>Her göstergenin kendine özgü güçlü ve zayıf yönleri vardır. Bu nedenle göstergeleri birlikte değerlendirmek önemlidir.</li>
+                <li>Teknik analiz, yatırım kararlarında yardımcı bir araçtır; temel analiz, piyasa koşulları, risk yönetimi ve kişisel finansal hedefler de dikkate alınmalıdır.</li>
+                <li>Geçmiş performans gelecekteki sonuçların garantisi değildir.</li>
+            </ul>
+            <p style="margin-top: 15px; font-style: italic;">Her yatırımcının kendi araştırmasını yapması, risk toleransını belirlemesi ve gerektiğinde profesyonel danışmanlık hizmeti alması tavsiye edilir.</p>
+        </div>
     </div>
 </body>
 </html> 
