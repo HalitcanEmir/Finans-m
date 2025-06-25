@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ symbol }} RSI & MACD Grafikler</title>
+    <style>
+        .grafik-box { margin-bottom: 40px; }
+        .grafik-box img { border: 1px solid #ccc; background: #fafafa; max-width: 100%; }
+        h2 { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>{{ symbol }} RSI & MACD Grafikler</h1>
+    {% if error %}
+        <div style="color: red;">{{ error }}</div>
+    {% else %}
+        <div class="grafik-box">
+            <h2>RSI Grafiği</h2>
+            <img src="data:image/png;base64,{{ rsi_grafik }}" alt="RSI Grafiği">
+        </div>
+        <div class="grafik-box">
+            <h2>MACD Grafiği</h2>
+            <img src="data:image/png;base64,{{ macd_grafik }}" alt="MACD Grafiği">
+        </div>
+        <div class="grafik-box">
+            <h2>MA50 & MA200 Hareketli Ortalamalar</h2>
+            <img src="data:image/png;base64,{{ ma_grafik }}" alt="MA50 & MA200 Hareketli Ortalamalar Grafiği">
+        </div>
+    {% endif %}
+</body>
+</html> 

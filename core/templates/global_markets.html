@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Küresel Borsa Hacmi ve Öncü Şirketler</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f8f9fa; }
+        h1, h2 { color: #2c3e50; }
+        .chart-container { margin-bottom: 40px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px #eee; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px; }
+        .desc { color: #444; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Küresel Borsa Hacmi ve Öncü Şirketlerin Hisse Performansı</h1>
+    <div class="desc">
+        <b>Küresel Borsa Hacminin Yıllara Göre Değişimi (2000–2024)</b><br>
+        Dünya genelindeki toplam hisse senedi piyasa kapitalizasyonunun 2000 yılından 2024'e kadarki değişimi aşağıdaki grafikte gösterilmektedir. 2000'de yaklaşık 31 trilyon $ olan küresel piyasa değeri, 2007'de 60 trilyon $ ile zirve yapmış, 2008 finansal kriziyle 32 trilyon $'a gerilemiş ve 2021 sonunda 111 trilyon $ ile tarihi zirvesine ulaşmıştır. 2022'de ise 93.7 trilyon $'a gerilemiş, 2023–2024'te tekrar yükselmiştir. Kaynaklar: Dünya Bankası, Visual Capitalist, Macrotrends.
+    </div>
+    <div class="chart-container">
+        <h2>Küresel Hisse Senedi Piyasa Değeri (2000–2024)</h2>
+        <img src="data:image/png;base64,{{ market_cap_chart }}" alt="Küresel Piyasa Değeri Grafiği">
+    </div>
+
+    <div class="desc">
+        <b>Büyük Şirketlerin Hisse Değer Kazançları (Son 10–20 Yıl)</b><br>
+        Aşağıda Apple, Microsoft ve Amazon gibi büyük şirketlerin hisse senedi fiyatlarındaki uzun vadeli büyüme grafiklerle sunulmuştur. Veriler Macrotrends ve Yahoo Finance gibi güvenilir finansal kaynaklardan derlenmiştir.
+    </div>
+    <div class="chart-container">
+        <h2>Apple (AAPL) Hisse Fiyatı (2000–2024)</h2>
+        <img src="data:image/png;base64,{{ apple_chart }}" alt="Apple Hisse Grafiği">
+    </div>
+    <div class="chart-container">
+        <h2>Microsoft (MSFT) Hisse Fiyatı (2000–2024)</h2>
+        <img src="data:image/png;base64,{{ msft_chart }}" alt="Microsoft Hisse Grafiği">
+    </div>
+    <div class="chart-container">
+        <h2>Amazon (AMZN) Hisse Fiyatı (2000–2024)</h2>
+        <img src="data:image/png;base64,{{ amzn_chart }}" alt="Amazon Hisse Grafiği">
+    </div>
+    <div class="desc" style="font-size: 0.95em; color: #888;">
+        Kaynaklar: Dünya Bankası, Visual Capitalist, Macrotrends, Yahoo Finance.
+    </div>
+</body>
+</html> 

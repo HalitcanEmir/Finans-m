@@ -4,111 +4,164 @@
     <meta charset="UTF-8">
     <title>Hisse Sorgulama</title>
     <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .chart-container {
+            margin-top: 32px;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error-message {
+            background-color: #fff3f3;
+            border: 1px solid #ffcdd2;
+            color: #d32f2f;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-right: 8px;
+        }
+        button {
+            padding: 8px 16px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1565c0;
+        }
         .data-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
         .card { background: #f8fafd; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 18px; min-width: 120px; text-align: center; box-shadow: 0 1px 4px #0001; }
-        .chart-container { margin-top: 32px; text-align: center; }
-        .interval-select { margin-top: 12px; }
-        .error-message { 
-            background-color: #fff3f3; 
-            border: 1px solid #ffcdd2; 
-            color: #d32f2f; 
-            padding: 12px 16px; 
-            border-radius: 4px; 
-            margin: 16px 0; 
-        }
     </style>
 </head>
 <body>
     <h1>Hisse Sorgulama</h1>
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="symbol" placeholder="Örn: NVDA, AAPL" required {% if symbol %}value="{{ symbol }}"{% endif %}>
+        <input type="text" name="symbol" placeholder="Örn: NVDA, AAPL" required {% if sembol %}value="{{ sembol }}"{% endif %}>
         <select name="interval" class="interval-select">
             {% for code, label, period, interval in intervals %}
-                <option value="{{ code }}" {% if code == selected_interval %}selected{% endif %}>{{ label }}</option>
+                <option value="{{ code }}" {% if code == selected_code %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
         <button type="submit">Verileri Göster</button>
     </form>
 
     {% if error %}
-    <div class="error-message">
-        {{ error }}
-    </div>
+    <div class="error-message">{{ error }}</div>
     {% endif %}
 
-    {% if chart_error %}
-    <div class="error-message">
-        {{ chart_error }}
-    </div>
-    {% endif %}
-
-    {% if current_price %}
+    {% if hisse %}
     <div class="data-cards">
-        <div class="card"><b>Seçili Aralık Yüksek</b><br>{% if range_high %}${{ range_high|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>Seçili Aralık Düşük</b><br>{% if range_low %}${{ range_low|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>Seçili Aralık Ortalama</b><br>{% if range_mean %}${{ range_mean|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>Seçili Aralık Son Fiyat</b><br>{% if range_last %}${{ range_last|floatformat:2 }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>Piyasa Değeri</b><br>{% if market_cap %}${{ market_cap }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>52H Yüksek</b><br>{% if fifty_two_week_high %}${{ fifty_two_week_high }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>52H Düşük</b><br>{% if fifty_two_week_low %}${{ fifty_two_week_low }}{% else %}Veri yok{% endif %}</div>
-        <div class="card"><b>Hedef Fiyat</b><br>{% if target_mean_price %}${{ target_mean_price }}{% else %}Veri yok{% endif %}</div>
-    </div>
-    <div class="card" style="margin-top:24px; max-width:400px; margin-left:auto; margin-right:auto;">
-        <div class="card-header">
-            <h5>📊 Temel Finansal Göstergeler</h5>
-        </div>
-        <div class="card-body">
-            <ul class="list-group" style="list-style:none; padding:0;">
-                <li class="list-group-item"><strong>F/K (PE):</strong> {{ pe_ratio }}</li>
-                <li class="list-group-item"><strong>PD/DD (PB):</strong> {{ pb_ratio }}</li>
-                <li class="list-group-item"><strong>ROE:</strong> {{ roe }}</li>
-                <li class="list-group-item"><strong>Borç / Özsermaye:</strong> {{ de_ratio }}</li>
-            </ul>
-        </div>
+        <div class="card"><b>Son Fiyat</b><br>{{ hisse.son_fiyat }} {{ hisse.para_birimi }}</div>
+        <div class="card"><b>Piyasa Değeri</b><br>{{ hisse.piyasa_degeri }}</div>
+        <div class="card"><b>52H Yüksek</b><br>{{ hisse.52h_yuksek }}</div>
+        <div class="card"><b>52H Düşük</b><br>{{ hisse.52h_dusuk }}</div>
+        <div class="card"><b>Hacim</b><br>{{ hisse.hacim }}</div>
+        <div class="card"><b>Hedef Fiyat</b><br>{{ hisse.hedef_fiyat }}</div>
     </div>
     {% endif %}
-    {% if chart_image %}
+
     <div class="chart-container">
-        <h3>{{ symbol }} - {{ selected_interval_label }}</h3>
-        <img src="data:image/png;base64,{{ chart_image }}" alt="Fiyat Grafiği" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
-        {% if last_updated %}
-        <p>Veriler güncellenme zamanı: {{ last_updated }}</p>
+        <h2>{{ sembol }} - Fiyat ve Hacim Grafiği ({{ selected_label }})</h2>
+        {% if fiyat_hacim_grafik %}
+            <img src="data:image/png;base64,{{ fiyat_hacim_grafik }}" alt="Fiyat ve Hacim Grafiği">
+        {% else %}
+            <p>Grafik verisi alınamadı.</p>
         {% endif %}
     </div>
-    {% endif %}
-    {% if price_volume_chart or ma_chart or rsi_chart or macd_chart %}
+
+    {% if ma_chart %}
     <div class="chart-container">
-        <h2>Teknik Analiz Grafikler</h2>
-        {% if price_volume_chart %}
-        <div style="margin-bottom:24px;">
-            <h4>Fiyat ve Hacim</h4>
-            <img src="data:image/png;base64,{{ price_volume_chart }}" alt="Fiyat ve Hacim" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
-            <div style="font-size:13px; color:#555;">Fiyat (çizgi) ve hacim (bar) aynı grafikte gösterilir.</div>
+        <h3>{{ sembol }} - MA50 & MA200 Hareketli Ortalamalar</h3>
+        <img src="data:image/png;base64,{{ ma_chart }}" alt="MA50 ve MA200">
+        <div style="font-size:13px; color:#555;">
+            Mavi: Kapanış Fiyatı<br>
+            Turuncu: 50 Günlük Ortalama (MA50) <b>{% if ma50_val %}{{ ma50_val|floatformat:2 }}{% else %}-{% endif %}</b><br>
+            Yeşil: 200 Günlük Ortalama (MA200) <b>{% if ma200_val %}{{ ma200_val|floatformat:2 }}{% else %}-{% endif %}</b>
         </div>
-        {% endif %}
-        {% if ma_chart %}
-        <div style="margin-bottom:24px;">
-            <h4>Hareketli Ortalamalar (MA50 & MA200)</h4>
-            <img src="data:image/png;base64,{{ ma_chart }}" alt="MA50 ve MA200" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
-            <div style="font-size:13px; color:#555;">Fiyat, 50 ve 200 günlük hareketli ortalamalar ile birlikte gösterilir.</div>
-        </div>
-        {% endif %}
-        {% if rsi_chart %}
-        <div style="margin-bottom:24px;">
-            <h4>RSI (Relative Strength Index)</h4>
-            <img src="data:image/png;base64,{{ rsi_chart }}" alt="RSI" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
-            <div style="font-size:13px; color:#555;">RSI son 14 günlük fiyat ivmesini gösterir. 70 üzeri aşırı alım, 30 altı aşırı satım bölgesidir.</div>
-        </div>
-        {% endif %}
-        {% if macd_chart %}
-        <div style="margin-bottom:24px;">
-            <h4>MACD</h4>
-            <img src="data:image/png;base64,{{ macd_chart }}" alt="MACD" style="max-width:100%; border:1px solid #eee; border-radius:6px;">
-            <div style="font-size:13px; color:#555;">MACD ve sinyal çizgisi ile trend değişimleri analiz edilir.</div>
-        </div>
-        {% endif %}
     </div>
     {% endif %}
+
+    <div class="chart-container">
+        <h2>{{ sembol }} - RSI (Relative Strength Index) Grafiği</h2>
+        {% if rsi_grafik %}
+            <img src="data:image/png;base64,{{ rsi_grafik }}" alt="RSI Grafiği">
+        {% else %}
+            <p>RSI grafiği verisi alınamadı.</p>
+        {% endif %}
+    </div>
+    <div class="chart-container">
+        <h2>{{ sembol }} - MACD (Moving Average Convergence Divergence) Grafiği</h2>
+        {% if macd_grafik %}
+            <img src="data:image/png;base64,{{ macd_grafik }}" alt="MACD Grafiği">
+        {% else %}
+            <p>MACD grafiği verisi alınamadı.</p>
+        {% endif %}
+    </div>
+    <div class="chart-container">
+        <h2>{{ sembol }} - Bollinger Bantları</h2>
+        {% if bollinger_grafik %}
+            <img src="data:image/png;base64,{{ bollinger_grafik }}" alt="Bollinger Bantları Grafiği">
+        {% else %}
+            <p>Bollinger Bantları grafiği verisi alınamadı.</p>
+        {% endif %}
+    </div>
+    <div class="chart-container">
+        <h2>{{ sembol }} - ADX Göstergesi (Trend Gücü)</h2>
+        {% if adx_grafik %}
+            <img src="data:image/png;base64,{{ adx_grafik }}" alt="ADX Grafiği">
+        {% else %}
+            <p>ADX grafiği verisi alınamadı.</p>
+        {% endif %}
+    </div>
+    {% if temettu_grafik %}
+    <div class="chart-container">
+        <h2>{{ sembol }} - Temettü Tarihçesi</h2>
+        <img src="data:image/png;base64,{{ temettu_grafik }}" alt="Temettü Grafiği">
+    </div>
+    {% endif %}
+    {% if kazanc_grafik %}
+    <div class="chart-container">
+        <h2>{{ sembol }} - Kazanç Tarihçesi</h2>
+        <img src="data:image/png;base64,{{ kazanc_grafik }}" alt="Kazanç Grafiği">
+    </div>
+    {% endif %}
+    <div class="chart-container">
+        <h2>{{ sembol }} - Mum Grafiği (Candlestick) (Entegre Fonksiyon)</h2>
+        {% if candlestick_chart %}
+            <img src="data:image/png;base64,{{ candlestick_chart }}" alt="Mum Grafik">
+        {% else %}
+            <p style="color: #b00;">Veri alınamadı veya mum grafiği oluşturulamadı.</p>
+        {% endif %}
+    </div>
+    <div class="chart-container">
+        <h2>{{ sembol }} - Destek ve Direnç Seviyeleri</h2>
+        {% if destek_direnc_grafik %}
+            <img src="data:image/png;base64,{{ destek_direnc_grafik }}" alt="Destek ve Direnç Grafiği">
+        {% else %}
+            <p style="color: #b00;">Destek ve direnç grafiği verisi alınamadı.</p>
+        {% endif %}
+    </div>
 </body>
 </html> 

@@ -1,0 +1,39 @@
+{% include 'navbar.html' %}
+<h1>Yapay Zekâya Danış</h1>
+<div class="container">
+    <h2>Finans Chatbot</h2>
+    <div id="chat-box"></div>
+    <form id="chat-form">
+        {% csrf_token %}
+        <input type="text" id="user-input" name="message" placeholder="Mesajınızı yazın..." required>
+        <button type="submit">Gönder</button>
+    </form>
+</div>
+<script>
+    const form = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const message = userInput.value.trim();
+        if (!message) return;
+        chatBox.innerHTML += `<div class="user"><strong>Sen:</strong> ${message}</div>`;
+        userInput.value = '';
+        try {
+            const response = await fetch('/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message })
+            });
+            const data = await response.json();
+            chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> ${data.response}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (error) {
+            chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> Bir hata oluştu.</div>`;
+        }
+    });
+</script> 

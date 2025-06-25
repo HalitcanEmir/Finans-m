@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ symbol }} RSI Tablosu</title>
+    <style>
+        .info-box {
+            background: #f4f8ff;
+            border: 1px solid #cce;
+            border-radius: 8px;
+            padding: 22px 24px;
+            margin-bottom: 32px;
+            max-width: 900px;
+        }
+        .info-box h2 { margin-top: 0; }
+        .info-box ul { margin: 10px 0 10px 20px; }
+        .info-box pre {
+            background: #222;
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 1em;
+        }
+        table { border-collapse: collapse; width: 60%; }
+        th, td { border: 1px solid #bbb; padding: 8px 12px; text-align: center; }
+        th { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>{{ symbol }} RSI Değerleri Tablosu</h1>
+    <div class="info-box">
+        <h2>1. RSI (Relative Strength Index)</h2>
+        <p>📌 <b>Amacı</b><br>
+        Aşırı alım / aşırı satım bölgelerini tespit etmek için kullanılır:</p>
+        <ul>
+            <li><b>RSI &gt; 70</b> → Aşırı alım (fiyat şişmiş olabilir)</li>
+            <li><b>RSI &lt; 30</b> → Aşırı satım (fiyat dipte olabilir)</li>
+        </ul>
+        <p>📦 <b>Kullanılan Kütüphaneler</b></p>
+        <ul>
+            <li><b>pandas</b> → Hesaplama için</li>
+            <li><b>matplotlib.pyplot</b> → Grafik çizimi</li>
+        </ul>
+        <p>🔧 <b>Nasıl Eklenir?</b></p>
+        <b>a. RSI hesaplayan fonksiyon:</b>
+        <pre><code>def calculate_rsi(data, period=14):
+    delta = data['Close'].diff()
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+    avg_gain = gain.rolling(window=period).mean()
+    avg_loss = loss.rolling(window=period).mean()
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi
+</code></pre>
+        <b>b. RSI değerini dataframe'e ekle:</b>
+        <pre><code>data['RSI'] = calculate_rsi(data)
+</code></pre>
+        <b>c. RSI grafiği oluştur:</b>
+        <pre><code>plt.figure(figsize=(14,4))
+plt.plot(data.index, data['RSI'], label='RSI')
+plt.axhline(70, color='red', linestyle='--', label='Aşırı Alım')
+plt.axhline(30, color='green', linestyle='--', label='Aşırı Satım')
+plt.title(f'{symbol} RSI Göstergesi')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+</code></pre>
+    </div>
+    <div class="info-box">
+        <h2>2. MACD (Moving Average Convergence Divergence)</h2>
+        <p>📌 <b>Amacı</b><br>
+        Trendin değişme zamanını tahmin etmeye yarar:</p>
+        <ul>
+            <li><b>MACD çizgisi, sinyal çizgisini yukarı keserse</b> → <b>AL</b></li>
+            <li><b>Aşağı keserse</b> → <b>SAT</b></li>
+        </ul>
+        <p>📦 <b>Kullanılan Kütüphaneler</b></p>
+        <ul>
+            <li><b>pandas</b></li>
+            <li><b>matplotlib.pyplot</b></li>
+        </ul>
+        <p>🔧 <b>Nasıl Eklenir?</b></p>
+        <b>a. MACD hesaplaması:</b>
+        <pre><code>exp1 = data['Close'].ewm(span=12, adjust=False).mean()
+exp2 = data['Close'].ewm(span=26, adjust=False).mean()
+macd = exp1 - exp2
+signal = macd.ewm(span=9, adjust=False).mean()
+</code></pre>
+        <b>b. MACD grafiği:</b>
+        <pre><code>plt.figure(figsize=(14,4))
+plt.plot(data.index, macd, label='MACD')
+plt.plot(data.index, signal, label='Sinyal Çizgisi')
+plt.axhline(0, color='gray', linestyle='--')
+plt.title(f'{symbol} MACD Göstergesi')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+</code></pre>
+        <b>💡 Entegrasyon Tavsiyesi:</b>
+        <div style="background:#e8f7e2; border:1px solid #b2e2b2; border-radius:6px; padding:10px 16px; margin-top:10px;">
+            Her iki grafiği base64 ile encode edip HTML içinde gösterebilirsiniz.<br>
+            Kullanıcı sembolü girdikten sonra, hem RSI hem de MACD analizlerini aynı anda hesaplayıp görsel olarak sunmak oldukça yatırımcı dostu olur.
+        </div>
+    </div>
+    {% if error %}
+        <div style="color: red;">{{ error }}</div>
+    {% endif %}
+    {% if rsi_table %}
+    <table>
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>RSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rsi_table %}
+            <tr>
+                <td>{{ row.date }}</td>
+                <td>{{ row.rsi }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html> 

@@ -65,58 +65,34 @@
 </head>
 <body>
 
-<nav>
-  <ul>
-    <li><a href="https://www.google.com" target="_blank">Ana Sayfa</a></li>
-    <li><a href="{% url 'charts' %}">Grafikler</a></li>
-  </ul>
-</nav>
-
-<div class="container">
-    <h2>Finans Chatbot</h2>
-    <div id="chat-box"></div>
-    <form id="chat-form">
-        {% csrf_token %}
-        <input type="text" id="user-input" name="message" placeholder="Mesajınızı yazın..." required>
-        <button type="submit">Gönder</button>
-    </form>
+{% include 'navbar.html' %}
+<div style="text-align:center; margin-top:48px; margin-bottom:48px;">
+    <h1 style="font-size:2.5rem; margin-bottom:18px;">💡 Yatırım Kararlarını Güçlendiren Borsa Analiz Platformu</h1>
+    <p style="font-size:1.2rem; color:#444; margin-bottom:32px;">
+        Teknik ve temel analiz araçları, dinamik grafikler ve yapay zekâ destekli danışmanlık bu platformda bir araya geliyor.
+    </p>
+    <a href="/hisse-analizi/" style="display:inline-block; margin:0 12px 0 0; padding:14px 32px; background:#1976d2; color:white; border-radius:6px; text-decoration:none; font-size:1.1rem;">📊 Hisse Analizi Yap</a>
+    <a href="/chatbot/" style="display:inline-block; margin:0; padding:14px 32px; background:#43a047; color:white; border-radius:6px; text-decoration:none; font-size:1.1rem;">🤖 Yapay Zekâya Danış</a>
 </div>
 
-<script>
-    const form = document.getElementById('chat-form');
-    const userInput = document.getElementById('user-input');
-    const chatBox = document.getElementById('chat-box');
+<section style="max-width:900px; margin:48px auto 0 auto; display:flex; flex-wrap:wrap; gap:32px; justify-content:center;">
+    <div style="flex:1 1 220px; min-width:220px; background:#f8fafd; border-radius:8px; padding:28px 20px; box-shadow:0 1px 4px #0001; text-align:center;">
+        <h3>🧠 Akıllı Hisse Analizi</h3>
+        <p>Fiyat, hacim, RSI, MACD gibi teknik göstergeleri; PE, ROE gibi temel oranları tek ekranda analiz edebilirsiniz.</p>
+    </div>
+    <div style="flex:1 1 220px; min-width:220px; background:#f8fafd; border-radius:8px; padding:28px 20px; box-shadow:0 1px 4px #0001; text-align:center;">
+        <h3>🤖 Yapay Zekâ Destekli Danışmanlık</h3>
+        <p>Doğal dilde sorular sorarak yatırım fikirleri alabilir, verileri nasıl yorumlayacağınızı öğrenebilirsiniz.</p>
+    </div>
+    <div style="flex:1 1 220px; min-width:220px; background:#f8fafd; border-radius:8px; padding:28px 20px; box-shadow:0 1px 4px #0001; text-align:center;">
+        <h3>📚 Yatırım Bilgi Merkezi</h3>
+        <p>Borsa, grafik okuma ve yatırım stratejileriyle ilgili eğitici içeriklerle kendinizi geliştirin.</p>
+    </div>
+</section>
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const message = userInput.value.trim();
-        if (!message) return;
-
-        // Kullanıcı mesajını ekle
-        chatBox.innerHTML += `<div class="user"><strong>Sen:</strong> ${message}</div>`;
-        userInput.value = '';
-
-        try {
-            const response = await fetch('/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({ message })
-            });
-
-            const data = await response.json();
-
-            // Bot cevabını ekle
-            chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> ${data.response}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        } catch (error) {
-            chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> Bir hata oluştu.</div>`;
-        }
-    });
-</script>
+<h1>Finansal Analiz Platformu</h1>
+<p>Bu proje, yatırımcılar ve finans meraklıları için modern, görsel ve yapay zekâ destekli bir analiz platformudur.<br>
+Hisse analizi, eğitim, yatırımcı hikayeleri ve daha fazlası tek bir çatı altında!</p>
 
 </body>
 </html>
