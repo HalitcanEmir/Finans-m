@@ -844,6 +844,15 @@ def rsi_macd_grafik_view(request):
 def egitim(request):
     return render(request, 'egitim.html')
 
+def egitim_modul1(request):
+    return render(request, 'egitim_modul1.html')
+
+def egitim_modul2(request):
+    return render(request, 'egitim_modul2.html')
+
+def egitim_modul3(request):
+    return render(request, 'egitim_modul3.html')
+
 def yatirimcilar(request):
     return render(request, 'yatirimcilar.html')
 

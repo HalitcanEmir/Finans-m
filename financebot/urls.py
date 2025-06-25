@@ -8,6 +8,9 @@ urlpatterns = [
     path('hisse-analizi/', core_views.charts, name='hisse_analizi'),
     path('chatbot/', core_views.chatbot, name='chatbot'),
     path('egitim/', core_views.egitim, name='egitim'),
+    path('egitim/modul-1/', core_views.egitim_modul1, name='egitim_modul1'),
+    path('egitim/modul-2/', core_views.egitim_modul2, name='egitim_modul2'),
+    path('egitim/modul-3/', core_views.egitim_modul3, name='egitim_modul3'),
     path('yatirimcilar/', core_views.yatirimcilar, name='yatirimcilar'),
     path('borsa-nedir/', core_views.borsa_nedir, name='borsa_nedir'),
 ]
