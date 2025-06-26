@@ -3,73 +3,257 @@
 {% block title %}Sende Başla{% endblock %}
 
 {% block content %}
-<h1>Sende Başla</h1>
-<p>Burada sanal portföy oluşturabilir, hisse alımı yapabilirsin.</p>
+<div class="sb-bg">
+  <div class="sb-container">
+    <h1 class="sb-title">Sende Başla</h1>
+    <div class="sb-desc">Burada sanal portföy oluşturabilir, hisse alımı yapabilirsin.</div>
+    <form method="post" class="sb-form">
+      {% csrf_token %}
+      <input type="text" name="stock_symbol" placeholder="Hisse kodu" class="sb-input">
+      <input type="number" name="quantity" placeholder="Adet" min="1" step="1" class="sb-input">
+      <button type="submit" class="sb-btn">Satın Al</button>
+    </form>
+    {% if messages %}
+      <ul class="sb-messages">
+        {% for message in messages %}
+          <li class="sb-message {% if message.tags == 'error' %}sb-error{% else %}sb-success{% endif %}">
+            {{ message }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if portfolio %}
+      <div class="sb-balance-card">
+        <span class="sb-balance-icon">💰</span>
+        <span class="sb-balance-label">Bakiye:</span>
+        <span class="sb-balance-amount">${{ portfolio.balance|floatformat:2 }}</span>
+      </div>
+    {% endif %}
+    <div class="sb-portfolio-card">
+      <div class="sb-portfolio-title">💼 Portföyünüz</div>
+      <div class="sb-table-wrapper">
+        <table class="sb-table">
+          <thead>
+            <tr>
+              <th>Hisse</th>
+              <th>Adet</th>
+              <th>Alış Fiyatı</th>
+              <th>Güncel Fiyat</th>
+              <th>Kâr/Zarar</th>
+              <th>Kâr/Zarar (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if holdings and holdings|length > 0 %}
+              {% for h in holdings %}
+              <tr>
+                <td>{{ h.symbol }}</td>
+                <td>{{ h.quantity|floatformat:2 }}</td>
+                <td>${{ h.avg_price|floatformat:2 }}</td>
+                <td>
+                  {% if h.current_price %}
+                    ${{ h.current_price|floatformat:2 }}
+                  {% else %}-{% endif %}
+                </td>
+                <td>
+                  {% if h.profit_loss %}
+                    <span class="sb-profit-loss {% if h.profit_loss > 0 %}sb-profit{% elif h.profit_loss < 0 %}sb-loss{% endif %}">
+                      {% if h.profit_loss > 0 %}▲{% elif h.profit_loss < 0 %}▼{% endif %}
+                      ${{ h.profit_loss|floatformat:2 }}
+                    </span>
+                  {% else %}-{% endif %}
+                </td>
+                <td>
+                  {% if h.profit_loss_pct %}
+                    <span class="sb-profit-loss {% if h.profit_loss_pct > 0 %}sb-profit{% elif h.profit_loss_pct < 0 %}sb-loss{% endif %}">
+                      {% if h.profit_loss_pct > 0 %}▲{% elif h.profit_loss_pct < 0 %}▼{% endif %}
+                      {{ h.profit_loss_pct|floatformat:2 }}%
+                    </span>
+                  {% else %}-{% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" style="text-align:center;">Henüz hisse almadınız.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="stock_symbol" placeholder="Hisse kodu">
-  <input type="number" name="quantity" placeholder="Adet" min="1" step="1">
-  <button type="submit">Satın Al</button>
-</form>
-
-{% if messages %}
-  <ul>
-    {% for message in messages %}
-      <li style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
-        {{ message }}
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
-{% if portfolio %}
-  <h2>Bakiyeniz: ${{ portfolio.balance|floatformat:2 }}</h2>
-{% endif %}
-
-<h2>Portföyünüz</h2>
-<table border="1" cellpadding="8" style="border-collapse:collapse; margin-top:16px;">
-  <tr>
-    <th>Hisse</th>
-    <th>Adet</th>
-    <th>Alış Fiyatı</th>
-    <th>Güncel Fiyat</th>
-    <th>Kâr/Zarar</th>
-    <th>Kâr/Zarar (%)</th>
-  </tr>
-  {% if holdings and holdings|length > 0 %}
-    {% for h in holdings %}
-    <tr>
-      <td>{{ h.symbol }}</td>
-      <td>{{ h.quantity|floatformat:2 }}</td>
-      <td>${{ h.avg_price|floatformat:2 }}</td>
-      <td>
-        {% if h.current_price %}
-          ${{ h.current_price|floatformat:2 }}
-        {% else %}
-          -
-        {% endif %}
-      </td>
-      <td>
-        {% if h.profit_loss %}
-          ${{ h.profit_loss|floatformat:2 }}
-        {% else %}
-          -
-        {% endif %}
-      </td>
-      <td>
-        {% if h.profit_loss_pct %}
-          {{ h.profit_loss_pct|floatformat:2 }}%
-        {% else %}
-          -
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  {% else %}
-    <tr>
-      <td colspan="6" style="text-align:center;">Henüz hisse almadınız.</td>
-    </tr>
-  {% endif %}
-</table>
+<style>
+.sb-bg {
+  min-height: 100vh;
+  background: linear-gradient(to right bottom, #0f0f0f, #2d3e60);
+  color: #E0E0E0;
+  padding: 2rem 0;
+}
+.sb-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.sb-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.3rem;
+  letter-spacing: -1px;
+  text-align: center;
+}
+.sb-desc {
+  font-size: 1rem;
+  color: #bbbbbb;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.sb-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+}
+.sb-input {
+  min-width: 150px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #1c1c1c;
+  color: #fff;
+  border: 1px solid #555;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.sb-input::placeholder {
+  color: #bbbbbb;
+}
+.sb-input:focus {
+  border: 1px solid #4DA3FF;
+}
+.sb-btn {
+  background: #4DA3FF;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(77,163,255,0.2);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.sb-btn:hover, .sb-btn:focus {
+  background: #62B3FF;
+}
+.sb-messages {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem 0;
+  text-align: center;
+}
+.sb-message {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+.sb-error { color: #FF5252; }
+.sb-success { color: #4CAF50; }
+.sb-balance-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  color: #A0FFAB;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 auto 2.2rem auto;
+  max-width: 340px;
+  box-shadow: 0 2px 12px 0 rgba(77,163,255,0.10);
+}
+.sb-balance-icon {
+  font-size: 1.5rem;
+}
+.sb-balance-label {
+  color: #A0C1FF;
+  font-size: 1.08rem;
+  font-weight: 500;
+}
+.sb-balance-amount {
+  color: #A0FFAB;
+  font-size: 1.18rem;
+  font-weight: 700;
+}
+.sb-portfolio-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  margin-bottom: 2rem;
+}
+.sb-portfolio-title {
+  font-size: 1.18rem;
+  font-weight: 600;
+  color: #A0C1FF;
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sb-table-wrapper {
+  overflow-x: auto;
+}
+.sb-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  color: #E0E0E0;
+  font-size: 1rem;
+}
+.sb-table th, .sb-table td {
+  padding: 0.7rem 0.6rem;
+  text-align: center;
+}
+.sb-table th {
+  color: #A0C1FF;
+  font-weight: 600;
+  font-size: 1.01rem;
+  border-bottom: 2px solid rgba(160,193,255,0.13);
+}
+.sb-table tr {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  transition: background 0.18s;
+}
+.sb-table tr:hover {
+  background: rgba(255,255,255,0.03);
+}
+.sb-profit-loss.sb-profit {
+  color: #4CAF50;
+  font-weight: 600;
+}
+.sb-profit-loss.sb-loss {
+  color: #FF5252;
+  font-weight: 600;
+}
+@media (max-width: 700px) {
+  .sb-container { padding: 0.7rem; }
+  .sb-form { flex-direction: column; gap: 0.7rem; padding: 1rem 0.5rem; }
+  .sb-balance-card { padding: 0.7rem 1rem; font-size: 1.05rem; }
+  .sb-portfolio-card { padding: 1rem 0.5rem; }
+  .sb-table th, .sb-table td { padding: 0.5rem 0.3rem; font-size: 0.97rem; }
+  .sb-title { font-size: 1.2rem; }
+}
+</style>
 {% endblock %} 
