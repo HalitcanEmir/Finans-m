@@ -12,16 +12,7 @@
     </div>
 
     <div class="messages-container" id="messages">
-        <!-- Örnek AI mesajı -->
-        <div class="message ai-message">
-            <div class="message-content">
-                Merhaba! Ben finans konusunda size yardımcı olmak için buradayım. Yatırım, borsa, ekonomi veya finansal planlama ile ilgili sorularınızı yanıtlayabilirim.
-            </div>
-            <div class="message-actions">
-                <button class="action-btn" title="Beğen">👍</button>
-                <button class="action-btn" title="Beğenme">👎</button>
-            </div>
-        </div>
+        <!-- Mesajlar buraya eklenecek -->
     </div>
 
     <div class="typing-indicator" id="typingIndicator" style="display: none;">
@@ -343,12 +334,24 @@ document.addEventListener('DOMContentLoaded', function() {
         typingIndicator.style.display = 'flex';
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-        // Simulate AI response (replace with actual API call)
-        setTimeout(() => {
+        // Gerçek API'ye istek at
+        fetch('/chatbot/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
             typingIndicator.style.display = 'none';
-            const response = "Bu bir örnek yanıttır. Gerçek API entegrasyonu yapılmalıdır.";
-            addMessage(response, 'ai');
-        }, 1500);
+            addMessage(data.response, 'ai');
+        })
+        .catch(error => {
+            typingIndicator.style.display = 'none';
+            addMessage('Bir hata oluştu. Lütfen tekrar deneyin.', 'ai');
+        });
     }
 
     function addMessage(content, type) {
@@ -373,6 +376,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // CSRF token alma fonksiyonu
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 });
 </script> 

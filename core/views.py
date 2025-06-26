@@ -869,7 +869,11 @@ def borsa_nedir(request):
     return render(request, 'borsa_nedir.html')
 
 def gemini_chat(prompt):
-    system_message = "Sen bir yatırım danışmanısın. Kullanıcıya finansal konularda yardımcı ol."
+    system_message = (
+        "Sen bir yardımcı sohbet botusun. Kullanıcıya ekonomi ve finans dahil her konuda, doğal ve insani bir dille, kendi fikrini belirterek cevap ver. "
+        "Ekonomiyle ilgili sorularda asla 'şuradan bakabilirsiniz', 'daha fazla bilgi için şuraya yönelin' gibi yönlendirme yapma. "
+        "Kullanıcıya doğrudan, net ve özgün bir yanıt ver. Yorum yapmaktan çekinme, ama yatırım tavsiyesi vermemeye dikkat et."
+    )
     full_prompt = f"{system_message}\n\n{prompt}"
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
     headers = {"Content-Type": "application/json"}
@@ -885,6 +889,7 @@ def gemini_chat(prompt):
     else:
         return f"Hata: {response.text}"
 
+@csrf_exempt
 def chatbot(request):
     if request.method == "GET":
         request.session['messages'] = []
@@ -892,14 +897,28 @@ def chatbot(request):
         request.session['messages'] = []
     messages = request.session['messages']
     if request.method == "POST":
-        user_input = request.POST.get("user_input", "")
+        # Hem klasik form hem JSON POST'u destekle
+        if request.content_type == 'application/json':
+            try:
+                data = json.loads(request.body)
+                user_input = data.get("message", "")
+            except Exception:
+                user_input = ""
+        else:
+            user_input = request.POST.get("user_input", "")
         if user_input:
             messages.append({"role": "user", "content": user_input})
             response_text = gemini_chat(user_input)
             messages.append({"role": "bot", "content": response_text})
+            # AJAX ise sadece JSON dön
+            if request.content_type == 'application/json':
+                return JsonResponse({"response": response_text})
         else:
             messages.append({"role": "bot", "content": "Lütfen bir mesaj girin."})
+            if request.content_type == 'application/json':
+                return JsonResponse({"response": "Lütfen bir mesaj girin."})
         request.session['messages'] = messages
+    # GET veya klasik POST ise sayfa render et
     return render(request, "chatbot.html", {"messages": messages})
 
 def sende_basla(request):
