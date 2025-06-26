@@ -1,171 +1,378 @@
-{% extends 'base.html' %}
+{% include 'navbar.html' %}
 
-{% block title %}Yapay Zekâya Danış{% endblock %}
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="header-content">
+            <div class="bot-icon">🤖</div>
+            <div class="header-text">
+                <h1>Yapay Zekâya Danış</h1>
+                <p>Finansal sorularınızı yazın, anında yanıt alın.</p>
+            </div>
+        </div>
+    </div>
 
-{% block content %}
-<div id="aiChatBg" class="d-flex align-items-center justify-content-center" style="min-height:80vh;">
-  <div id="chatContainer" class="shadow-lg rounded-4" style="width:100%; max-width:480px; background:rgba(30,30,47,0.98); min-height:520px; display:flex; flex-direction:column; position:relative;">
-    <div id="chatHeader" class="px-4 pt-4 pb-2" style="border-radius:2rem 2rem 0 0;">
-      <h2 class="fw-bold mb-0" style="color:#fff; font-size:1.35rem; letter-spacing:-1px;">🤖 Yapay Zekâya Danış</h2>
-      <div style="color:#A0C1FF; font-size:0.98rem;">Finansal sorularınızı yazın, anında yanıt alın.</div>
-    </div>
-    <div id="chatMessages" class="flex-grow-1 px-3 py-2" style="overflow-y:auto; display:flex; flex-direction:column; gap:1.1rem;">
-      {% if messages %}
-        {% for msg in messages %}
-          {% if msg.role == 'user' %}
-            <div class="chat-bubble user-bubble fade-in">
-              <span class="bubble-text">{{ msg.content }}</span>
+    <div class="messages-container" id="messages">
+        <!-- Örnek AI mesajı -->
+        <div class="message ai-message">
+            <div class="message-content">
+                Merhaba! Ben finans konusunda size yardımcı olmak için buradayım. Yatırım, borsa, ekonomi veya finansal planlama ile ilgili sorularınızı yanıtlayabilirim.
             </div>
-          {% elif msg.role == 'bot' %}
-            <div class="chat-bubble bot-bubble fade-in">
-              <span class="bubble-text">{{ msg.content }}</span>
+            <div class="message-actions">
+                <button class="action-btn" title="Beğen">👍</button>
+                <button class="action-btn" title="Beğenme">👎</button>
             </div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+        </div>
     </div>
-    <form id="chatForm" method="post" autocomplete="off" class="chat-input-form px-3 pb-3 pt-2" style="position:sticky; bottom:0; background:rgba(30,30,47,0.98); border-radius:0 0 2rem 2rem; z-index:2;">
-      {% csrf_token %}
-      <div class="input-group">
-        <input id="userInput" type="text" name="user_input" class="form-control" placeholder="Mesajınızı yazın..." required style="background:rgba(255,255,255,0.08); color:#fff; border:none; border-radius:1.5rem; font-size:1.08rem;">
-        <button id="sendBtn" class="btn btn-primary d-flex align-items-center justify-content-center ms-2" type="submit" style="border-radius:50%; width:44px; height:44px; background:#7F5AF0; border:none; transition:background 0.18s, transform 0.18s;">
-          <i class="fa-solid fa-paper-plane" style="font-size:1.25rem;"></i>
+
+    <div class="typing-indicator" id="typingIndicator" style="display: none;">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div class="input-container">
+        <textarea 
+            id="userInput" 
+            placeholder="Mesajınızı yazın..." 
+            rows="1"
+            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+        ></textarea>
+        <button id="sendButton" class="send-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </button>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
 
 <style>
-  #aiChatBg {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
-    background: linear-gradient(120deg, #1e1e2f 0%, #3a3b68 100%);
-    padding: 2.5rem 0;
-  }
-  #chatContainer {
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-    border-radius: 2rem;
-    min-height: 520px;
-    max-width: 480px;
-    margin: 0 auto;
+    background: linear-gradient(135deg, #14142b 0%, #1e1e3f 100%);
+    font-family: 'Inter', sans-serif;
+}
+
+.chat-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
     display: flex;
     flex-direction: column;
-    background: rgba(30,30,47,0.98);
-    position: relative;
-  }
-  #chatHeader {
-    border-radius: 2rem 2rem 0 0;
-    background: none;
-    text-align: left;
-  }
-  #chatMessages {
+    height: calc(100vh - 4rem);
+}
+
+.chat-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bot-icon {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #5c4dff 0%, #4a3fff 100%);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(92, 77, 255, 0.3);
+}
+
+.header-text h1 {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.header-text p {
+    color: #b0b0c3;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.messages-container {
     flex-grow: 1;
     overflow-y: auto;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1.1rem;
-    padding-bottom: 0.5rem;
-    scroll-behavior: smooth;
-  }
-  .chat-bubble {
-    max-width: 85%;
-    padding: 0.85rem 1.2rem;
-    border-radius: 1.3rem;
-    font-size: 1.08rem;
-    box-shadow: 0 2px 12px 0 rgba(127,90,240,0.07);
-    word-break: break-word;
-    opacity: 0;
-    transform: translateY(24px);
-    animation: fadeInBubble 0.5s forwards;
-  }
-  .user-bubble {
-    align-self: flex-end;
-    background: linear-gradient(90deg, #7F5AF0 60%, #232946 100%);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.message {
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.message-content {
+    padding: 1rem 1.25rem;
+    border-radius: 15px;
     color: #fff;
-    border-bottom-right-radius: 0.5rem;
-    box-shadow: 0 2px 12px 0 rgba(127,90,240,0.13);
-  }
-  .bot-bubble {
-    align-self: flex-start;
-    background: #f5f5fa;
-    color: #232136;
-    border-bottom-left-radius: 0.5rem;
-    box-shadow: 0 2px 12px 0 rgba(160,193,255,0.10);
-  }
-  .bubble-text {
-    font-family: 'Inter', 'Poppins', 'Roboto', Arial, sans-serif;
-    font-size: 1.08rem;
     line-height: 1.5;
-  }
-  .fade-in {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    transition: opacity 0.4s, transform 0.4s;
-  }
-  #chatForm {
-    position: sticky;
-    bottom: 0;
-    background: rgba(30,30,47,0.98);
-    border-radius: 0 0 2rem 2rem;
-    z-index: 2;
-    margin-top: auto;
-  }
-  #userInput:focus {
+    font-size: 0.95rem;
+}
+
+.user-message {
+    align-self: flex-end;
+}
+
+.user-message .message-content {
+    background-color: #5c4dff;
+    border-bottom-right-radius: 5px;
+}
+
+.ai-message {
+    align-self: flex-start;
+}
+
+.ai-message .message-content {
+    background-color: #292949;
+    border-bottom-left-radius: 5px;
+}
+
+.message-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #b0b0c3;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #b0b0c3;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+.input-container {
+    background: #202040;
+    border-radius: 25px;
+    padding: 0.75rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin: 1rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-family: inherit;
+    padding: 0.5rem;
+    resize: none;
+    max-height: 150px;
+    line-height: 1.5;
+}
+
+textarea::placeholder {
+    color: #b0b0c3;
+}
+
+textarea:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #7F5AF033;
-  }
-  #sendBtn:hover, #sendBtn:focus {
-    background: #A0C1FF;
-    color: #232136;
-    transform: scale(1.13);
-  }
-  @media (max-width: 600px) {
-    #chatContainer {
-      max-width: 100vw;
-      min-height: 100vh;
-      border-radius: 0;
-      box-shadow: none;
+}
+
+.send-button {
+    background: #5c4dff;
+    border: none;
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.send-button:hover {
+    background: #4a3fff;
+    transform: translateY(-2px);
+}
+
+.send-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chat-container {
+        margin: 1rem auto;
+        height: calc(100vh - 2rem);
     }
-    #aiChatBg {
-      padding: 0;
+
+    .message {
+        max-width: 90%;
     }
-    #chatHeader {
-      padding-left: 1rem;
-      padding-right: 1rem;
+
+    .bot-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
     }
-    #chatMessages {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
+
+    .header-text h1 {
+        font-size: 20px;
     }
-    #chatForm {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      border-radius: 0 0 1.2rem 1.2rem;
+}
+
+@media (max-width: 480px) {
+    .chat-header {
+        padding: 1rem;
     }
-  }
+
+    .message-content {
+        font-size: 0.9rem;
+    }
+
+    .input-container {
+        margin: 0.5rem 0;
+    }
+}
 </style>
 
 <script>
-function scrollToBottom() {
-  const chatMessages = document.getElementById('chatMessages');
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+document.addEventListener('DOMContentLoaded', function() {
+    const messagesContainer = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const typingIndicator = document.getElementById('typingIndicator');
 
-document.addEventListener('DOMContentLoaded', function () {
-  setTimeout(() => {
-    document.getElementById('chatContainer').classList.add('fade-in');
-    scrollToBottom();
-  }, 180);
-  const chatForm = document.getElementById('chatForm');
-  const userInput = document.getElementById('userInput');
-  chatForm.addEventListener('submit', function (e) {
-    setTimeout(() => {
-      userInput.value = '';
-      scrollToBottom();
-    }, 120);
-  });
-  const observer = new MutationObserver(scrollToBottom);
-  observer.observe(document.getElementById('chatMessages'), { childList: true });
+    // Auto-resize textarea
+    userInput.addEventListener('input', function() {
+        this.style.height = '';
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+    });
+
+    // Send message on Enter (but allow Shift+Enter for new line)
+    userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+
+    function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        // Add user message
+        addMessage(message, 'user');
+        userInput.value = '';
+        userInput.style.height = '';
+
+        // Show typing indicator
+        typingIndicator.style.display = 'flex';
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Simulate AI response (replace with actual API call)
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+            const response = "Bu bir örnek yanıttır. Gerçek API entegrasyonu yapılmalıdır.";
+            addMessage(response, 'ai');
+        }, 1500);
+    }
+
+    function addMessage(content, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}-message`;
+        
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
+        messageContent.textContent = content;
+        
+        messageDiv.appendChild(messageContent);
+
+        if (type === 'ai') {
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'message-actions';
+            actionsDiv.innerHTML = `
+                <button class="action-btn" title="Beğen">👍</button>
+                <button class="action-btn" title="Beğenme">👎</button>
+            `;
+            messageDiv.appendChild(actionsDiv);
+        }
+
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 });
-</script>
-{% endblock %} 
+</script> 
