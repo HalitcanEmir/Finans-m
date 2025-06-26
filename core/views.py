@@ -1021,3 +1021,28 @@ def rastgele_hikaye(request):
         'zorluk': secilen.zorluk,
         'bugunku_durum': secilen.bugunku_durum
     })
+
+@csrf_exempt
+def investment_projection(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        try:
+            monthly = float(data.get('monthly', 0))
+        except (TypeError, ValueError):
+            monthly = 0
+        def calculate_investment(monthly, rate, years):
+            r_month = rate / 12
+            total_months = years * 12
+            if r_month == 0:
+                return round(monthly * total_months, 2)
+            fv = monthly * ((1 + r_month) ** total_months - 1) / r_month
+            return round(fv, 2)
+        result = {}
+        for y in [1, 5, 10, 20]:
+            result[f'{y}_year'] = {
+                'no_growth': round(monthly * 12 * y, 2),
+                '10_percent': calculate_investment(monthly, 0.10, y),
+                '20_percent': calculate_investment(monthly, 0.20, y),
+            }
+        return JsonResponse(result)
+    return JsonResponse({'error': 'Invalid request'}, status=400)

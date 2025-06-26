@@ -4,6 +4,16 @@
 {% block head %}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+body {
+  background-color: #0f172a;
+  color: #f9fafb;
+}
+.section-grafikler {
+  background-color: #0f172a;
+  padding: 4rem 2rem;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
 .hero-section {
     position: relative;
     min-height: 100vh;
@@ -384,6 +394,486 @@
         height: 260px;
     }
 }
+
+/* Küresel Ekonomi Bölümü */
+.global-economy-section {
+    background: linear-gradient(180deg, #1f2937 0%, #0B1120 100%);
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.global-economy-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.global-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.global-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.global-card:hover {
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.global-card:hover::before {
+    opacity: 1;
+}
+
+.global-icon {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    width: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.global-card:hover .global-icon {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.global-title {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    position: relative;
+    z-index: 1;
+}
+
+.global-description {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .global-card {
+        margin: 0 1.5rem;
+        padding: 2rem;
+        min-height: 280px;
+    }
+    
+    .global-title {
+        font-size: 1.75rem;
+    }
+    
+    .global-description {
+        font-size: 1rem;
+    }
+}
+
+.grafiklar-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+.grafik-alani {
+  background-color: #111827;
+  color: #f9fafb;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+.grafik-baslik {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.grafik-aciklama {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.grafik-alt-aciklama {
+  font-size: 0.95rem;
+  opacity: 0.7;
+  margin-top: 1rem;
+  text-align: center;
+}
+.grafik-alani canvas {
+  max-width: 100%;
+  width: 100% !important;
+  height: 300px !important;
+  background: transparent;
+}
+@media (max-width: 1024px) {
+  .grafiklar-flex {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .grafik-alani {
+    max-width: 100%;
+  }
+}
+
+.analiz-kart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+.analiz-kart {
+  background-color: #111827;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  width: 220px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #f9fafb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.analiz-kart:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+.analiz-kart img {
+  height: 50px;
+  margin-bottom: 1rem;
+}
+.analiz-kart h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.analiz-kart p {
+  font-size: 0.98rem;
+  opacity: 0.85;
+}
+@media (max-width: 900px) {
+  .analiz-kart-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.al-sat-flex {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.al-sat-grafik {
+  position: relative;
+  background: #111827;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  max-width: 350px;
+  width: 100%;
+  text-align: center;
+}
+.al-sat-grafik-img {
+  width: 100%;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+.al-sat-tooltip {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  background: #22223b;
+  color: #fff;
+  padding: 0.75rem 1.2rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  z-index: 10;
+  max-width: 260px;
+}
+.al-sat-grafik:hover .al-sat-tooltip,
+.al-sat-grafik:focus-within .al-sat-tooltip {
+  display: block;
+}
+.al-sat-icerik {
+  max-width: 400px;
+  width: 100%;
+}
+.al-sat-baslik {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #f9fafb;
+}
+.al-sat-aciklama {
+  font-size: 1.08rem;
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+  color: #f9fafb;
+}
+.yatirimci-profiller {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+.yatirimci-kart {
+  flex: 1 1 160px;
+  background: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1rem 1.2rem;
+  color: #f9fafb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.yatirimci-kart h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.yatirimci-kart.erken-satan {
+  border-left: 5px solid #f59e42;
+  background: linear-gradient(90deg, #1e293b 80%, #f59e42 100%);
+}
+.yatirimci-kart.uzun-vadeli {
+  border-left: 5px solid #22c55e;
+  background: linear-gradient(90deg, #1e293b 80%, #22c55e 100%);
+}
+.yatirimci-kart:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 18px rgba(34,197,94,0.12);
+}
+@media (max-width: 900px) {
+  .al-sat-flex {
+    flex-direction: column;
+    align-items: center;
+  }
+  .yatirimci-profiller {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.yatirim-basliklar h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+.yatirim-basliklar p {
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+.yatirim-flex {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.yatirim-bilgi-kutu {
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 1rem;
+  padding: 2rem 1.5rem;
+  font-size: 1.08rem;
+  max-width: 350px;
+  min-width: 220px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.yatirim-grafik-kutu {
+  background: #111827;
+  border-radius: 1rem;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.yatirim-grafik-baslik {
+  color: #f9fafb;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.yatirim-grafik-kutu canvas {
+  max-width: 100%;
+  width: 100% !important;
+  height: 260px !important;
+  background: transparent;
+}
+.yatirim-alt-kutu {
+  background: #1e293b;
+  color: #f9fafb;
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.05rem;
+  text-align: center;
+  max-width: 420px;
+  margin: 2rem auto 0 auto;
+  opacity: 0.92;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+@media (max-width: 900px) {
+  .yatirim-flex {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .yatirim-bilgi-kutu, .yatirim-grafik-kutu {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+.yatirim-projeksiyon-container {
+  background: #111827;
+  border-radius: 1rem;
+  padding: 2rem 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.yatirim-label {
+  display: block;
+  font-size: 1.1rem;
+  color: #f9fafb;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.yatirim-input {
+  margin: 0 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.1rem;
+  width: 100px;
+}
+.yatirim-table-wrapper {
+  overflow-x: auto;
+}
+.yatirim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  background: #1e293b;
+  color: #f9fafb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+.yatirim-table th, .yatirim-table td {
+  padding: 0.8rem 1.2rem;
+  text-align: center;
+}
+.yatirim-table th {
+  background: #0f172a;
+  font-weight: 600;
+}
+.yatirim-table tr {
+  transition: background 0.2s;
+}
+.yatirim-table tr:hover {
+  background: #334155;
+}
+@media (max-width: 600px) {
+  .yatirim-table th, .yatirim-table td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.98rem;
+  }
+}
+
+.alinti-kutusu {
+  background: linear-gradient(90deg, #312e81 0%, #1e293b 100%);
+  color: #ffe066;
+  border-radius: 1.2rem;
+  padding: 1.5rem 2rem;
+  margin: 3rem auto 0 auto;
+  max-width: 520px;
+  text-align: center;
+  font-size: 1.18rem;
+  font-weight: 500;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(49,46,129,0.10);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+.alinti-kutusu.gorunur {
+  opacity: 1;
+  transform: translateY(0);
+}
+.alinti-ikon {
+  font-size: 1.5rem;
+  opacity: 0.85;
+}
+.alinti-metin {
+  flex: 1;
+}
+@media (max-width: 600px) {
+  .alinti-kutusu {
+    padding: 1rem 0.7rem;
+    font-size: 1rem;
+    max-width: 98vw;
+  }
+}
 </style>
 {% endblock %}
 
@@ -486,6 +976,315 @@
         </div>
     </div>
 </section>
+
+<!-- Küresel Ekonomi Bölümü -->
+<section class="global-economy-section">
+    <div class="container mx-auto">
+        <div class="global-card">
+            <div class="global-icon">
+                <span role="img" aria-label="Dünya">🌍</span>
+            </div>
+            <h2 class="global-title">Küresel Ekonomi ile Bağlantı</h2>
+            <p class="global-description">
+                Borsalar dünya ekonomisinin birer göstergesidir. Ülkelerin gelişmişlik düzeyleriyle doğrudan ilişkilidir. 
+                Küresel piyasalar birbirine bağlı olduğundan, bir ülkedeki gelişmeler diğerlerini de etkiler. 
+                Bu yüzden borsa, sadece yatırım değil, ekonomik sağlığın da bir göstergesidir.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Bölüm: Gerçek Verilerle Borsa (Yenilenmiş) -->
+<section class="section-grafikler">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-white mb-2 text-center">Gerçek Verilerle Borsa</h2>
+    <p class="text-lg text-white/80 mb-10 text-center">Borsalar sadece kavram değil, trilyon dolarlık sistemlerdir.</p>
+    <div class="grafiklar-flex">
+      <!-- Grafik 1 -->
+      <div class="grafik-alani">
+        <h3 class="grafik-baslik">Küresel Borsa Hacmi</h3>
+        <p class="grafik-aciklama">Küresel borsa hacmi, son 20 yılda 3 kat büyümüştür.</p>
+        <canvas id="globalChart"></canvas>
+      </div>
+      <!-- Grafik 2 -->
+      <div class="grafik-alani">
+        <h3 class="grafik-baslik">Apple'ın Yıllara Göre Değeri</h3>
+        <p class="grafik-aciklama">Apple, dünyanın en değerli şirketlerinden biridir.</p>
+        <canvas id="appleChart"></canvas>
+        <p class="grafik-alt-aciklama">Apple örneği, şirketlerin borsada nasıl büyüyebileceğini gösterir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Chart.js CDN ve grafik scripti -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const globalChartCtx = document.getElementById('globalChart').getContext('2d');
+new Chart(globalChartCtx, {
+  type: 'line',
+  data: {
+    labels: ['2000', '2010', '2020', '2024'],
+    datasets: [{
+      label: 'Küresel Borsa Hacmi (Trilyon $)',
+      data: [30, 50, 90, 110],
+      fill: true,
+      backgroundColor: 'rgba(99, 102, 241, 0.15)',
+      borderColor: '#6366f1',
+      tension: 0.4,
+      pointBackgroundColor: '#fff',
+      pointBorderColor: '#6366f1',
+      pointRadius: 5
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
+  }
+});
+
+const appleChartCtx = document.getElementById('appleChart').getContext('2d');
+new Chart(appleChartCtx, {
+  type: 'line',
+  data: {
+    labels: ['2010', '2015', '2020', '2023'],
+    datasets: [{
+      label: 'Apple Piyasa Değeri (Trilyon $)',
+      data: [0.2, 0.7, 1.3, 3],
+      fill: false,
+      borderColor: '#22d3ee',
+      backgroundColor: '#22d3ee',
+      tension: 0.4,
+      pointBackgroundColor: '#fff',
+      pointBorderColor: '#22d3ee',
+      pointRadius: 5
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
+  }
+});
+</script>
+
+<!-- 4. Modül: Teknik Analize Giriş (güncellendi) -->
+<section class="modul-4 teknik-analiz py-16">
+  <h2 class="text-2xl font-bold text-center text-white mb-8">Teknik Analize Giriş</h2>
+  <div class="analiz-kart-container">
+    <!-- Kart 1 -->
+    <div class="analiz-kart">
+      <img src="{% static 'images/mum.png' %}" alt="Mum Grafik İkonu" />
+      <h3>Mum Grafik</h3>
+      <p>Fiyatın açılış-kapanış ve en yüksek-en düşük seviyelerini gösterir.</p>
+    </div>
+    <!-- Kart 2 -->
+    <div class="analiz-kart">
+      <img src="{% static 'images/ma.png' %}" alt="Hareketli Ortalama İkonu" />
+      <h3>MA50 & MA200</h3>
+      <p>Kısa ve uzun vadeli trendleri gösterir. Kesişimler alım/satım sinyali olabilir.</p>
+    </div>
+    <!-- Kart 3 -->
+    <div class="analiz-kart">
+      <img src="{% static 'images/rsi.png' %}" alt="RSI İkonu" />
+      <h3>RSI</h3>
+      <p>Hissenin aşırı alım ya da satımda olup olmadığını ölçer. Genellikle 70/30 seviyesi referans alınır.</p>
+    </div>
+    <!-- Kart 4 -->
+    <div class="analiz-kart">
+      <img src="{% static 'images/macd.png' %}" alt="MACD İkonu" />
+      <h3>MACD</h3>
+      <p>İki ortalamanın farkına göre trendin yönünü ve gücünü gösterir.</p>
+    </div>
+    <!-- Kart 5: Alım/Satım Sinyali Grafik -->
+    <div class="analiz-kart">
+      <img src="{% static 'images/al-sat-ornek.png' %}" alt="Alım Satım Sinyali Grafik" />
+      <h3>Alım/Satım Sinyali</h3>
+      <p>Bu grafik, RSI ve MA kesişimlerinin nasıl alım/satım sinyali oluşturduğunu gösterir.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Modül: Alım/Satım Zamanlaması (sadece sağ açıklama ve profiller) -->
+<section class="modul-5 al-sat-zamanlama py-16">
+  <div class="al-sat-icerik" style="margin: 0 auto; max-width: 600px;">
+    <h2 class="al-sat-baslik">📈 Alım-Satım Zamanlaması Neden Önemlidir?</h2>
+    <p class="al-sat-aciklama">
+      Yanlış zamanda alınan bir hisse, uzun vadede zarara neden olabilir.<br>
+      Doğru zamanda satmak ise kârı korumanın anahtarıdır.
+    </p>
+    <div class="yatirimci-profiller">
+      <div class="yatirimci-kart erken-satan">
+        <h3>Erken Satan Yatırımcı</h3>
+        <p>Hissesi %10 yükselince hemen satar. Uzun vadeli büyümeyi kaçırır.</p>
+      </div>
+      <div class="yatirimci-kart uzun-vadeli">
+        <h3>Uzun Vadeli Tutucu</h3>
+        <p>Sağlam hisseleri yıllarca elinde tutar, bileşik getiriyle büyük kazanç sağlar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Modül: Yatırımda Bakış Açısı – Damlaya Damlaya Göl Olur -->
+<section class="modul-6 yatirim-bakis py-16">
+  <div class="yatirim-basliklar text-center mb-8">
+    <h2 class="text-2xl font-bold text-white mb-2">Yatırımda Bakış Açısı</h2>
+    <p class="text-lg text-white/80">Damlaya damlaya göl olur. Küçük yatırım büyür.</p>
+  </div>
+  <div class="yatirim-flex">
+    <div class="yatirim-bilgi-kutu">
+      <p>
+        Her ay sadece 100 TL ile bile yatırım yapmaya başlamak, uzun vadede büyük bir fark yaratır.<br>
+        Borsa, paranın kendi kendine çalıştığı bir alandır.<br>
+        Zaman ve sabır, yatırımın en büyük silahıdır.
+      </p>
+    </div>
+    <div class="yatirim-grafik-kutu">
+      <h3 class="yatirim-grafik-baslik">100 TL ile Ne Kadar Büyüyebilir?</h3>
+      <canvas id="yatirimBuyumeChart"></canvas>
+    </div>
+  </div>
+  <div class="yatirim-alt-kutu">
+    Yatırım büyüklüğünüz değil, yatırım süreniz önemli olabilir.
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const years = Array.from({length: 11}, (_, i) => i); // 0-10
+const values = [];
+let amount = 0;
+for (let i = 0; i <= 10; i++) {
+  amount = amount * 1.1 + 1200; // 100 TL x 12 ay, %10 yıllık bileşik
+  values.push(Math.round(amount));
+}
+new Chart(document.getElementById('yatirimBuyumeChart').getContext('2d'), {
+  type: 'line',
+  data: {
+    labels: years.map(y => y + '. yıl'),
+    datasets: [{
+      label: 'Birikim (TL)',
+      data: values,
+      fill: true,
+      backgroundColor: 'rgba(34,197,94,0.12)',
+      borderColor: '#22c55e',
+      tension: 0.4,
+      pointBackgroundColor: '#fff',
+      pointBorderColor: '#22c55e',
+      pointRadius: 5,
+      pointHoverRadius: 8
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#f9fafb' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#f9fafb' }, grid: { color: 'rgba(255,255,255,0.05)' }, min: 0, max: 25000 }
+    }
+  }
+});
+</script>
+
+<!-- 7. Modül: Yatırım Projeksiyonu Tablosu -->
+<section class="yatirim-projeksiyon py-16">
+  <div class="yatirim-projeksiyon-container">
+    <label for="monthly-input" class="yatirim-label">
+      💵 Aylık yatırım tutarınızı girin:
+      <input id="monthly-input" type="number" min="1" value="100" class="yatirim-input" /> USD
+    </label>
+    <div class="yatirim-table-wrapper">
+      <table class="yatirim-table">
+        <thead>
+          <tr>
+            <th>Yıl</th>
+            <th>Yatırılan Para</th>
+            <th>%10 Bileşik Getiri</th>
+            <th>%20 Bileşik Getiri</th>
+          </tr>
+        </thead>
+        <tbody id="yatirim-table-body">
+          <!-- JS ile doldurulacak -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+function updateInvestmentTable() {
+  const monthly = document.getElementById('monthly-input').value || 0;
+  fetch('/investment-projection/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+    body: JSON.stringify({monthly})
+  })
+  .then(res => res.json())
+  .then(data => {
+    const tbody = document.getElementById('yatirim-table-body');
+    tbody.innerHTML = '';
+    [['1_year','1 Yıl'],['5_year','5 Yıl'],['10_year','10 Yıl'],['20_year','20 Yıl']].forEach(([key, label]) => {
+      const row = data[key];
+      tbody.innerHTML += `<tr>
+        <td>${label}</td>
+        <td>${row.no_growth.toLocaleString()} USD</td>
+        <td>${row['10_percent'].toLocaleString()} USD</td>
+        <td>${row['20_percent'].toLocaleString()} USD</td>
+      </tr>`;
+    });
+  });
+}
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+document.getElementById('monthly-input').addEventListener('input', updateInvestmentTable);
+window.addEventListener('DOMContentLoaded', updateInvestmentTable);
+</script>
+
+<!-- Alıntı Kutusu / Düşünmeye Sevk Edici Cümle -->
+<div class="alinti-kutusu" id="alinti-kutusu">
+  <span class="alinti-ikon">💡</span>
+  <span class="alinti-metin">“Plan yapmayan, başkalarının planının parçası olur.”</span>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const alinti = document.getElementById('alinti-kutusu');
+  if ('IntersectionObserver' in window && alinti) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          alinti.classList.add('gorunur');
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+    observer.observe(alinti);
+  } else if (alinti) {
+    // Fallback: hemen göster
+    alinti.classList.add('gorunur');
+  }
+});
+</script>
 {% endblock %}
 
 {% block scripts %}
