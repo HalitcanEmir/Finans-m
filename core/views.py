@@ -885,14 +885,21 @@ def gemini_chat(prompt):
         return f"Hata: {response.text}"
 
 def chatbot(request):
-    response_text = ""
+    if request.method == "GET":
+        request.session['messages'] = []
+    if 'messages' not in request.session:
+        request.session['messages'] = []
+    messages = request.session['messages']
     if request.method == "POST":
         user_input = request.POST.get("user_input", "")
         if user_input:
+            messages.append({"role": "user", "content": user_input})
             response_text = gemini_chat(user_input)
+            messages.append({"role": "bot", "content": response_text})
         else:
-            response_text = "Lütfen bir mesaj girin."
-    return render(request, "chatbot.html", {"response": response_text})
+            messages.append({"role": "bot", "content": "Lütfen bir mesaj girin."})
+        request.session['messages'] = messages
+    return render(request, "chatbot.html", {"messages": messages})
 
 def sende_basla(request):
     holdings = []

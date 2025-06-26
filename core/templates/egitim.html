@@ -1,55 +1,177 @@
 {% include 'navbar.html' %}
-<h1>Eğitim</h1>
-<p>Borsa grafikleri nasıl okunur, analiz nasıl yapılır? Burada bulabilirsiniz.</p>
-
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Eğitim Modülleri</title>
-    <meta name="description" content="Borsa ve yatırım hakkında temel eğitim modülleri.">
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; background: #f8f9fa; }
-        h1 { color: #2c3e50; }
-        .modul-list { margin-top: 32px; }
-        .modul-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px #eee; margin-bottom: 24px; padding: 24px; }
-        .modul-title { font-size: 1.3em; font-weight: bold; color: #0074d9; margin-bottom: 8px; }
-        .modul-desc { color: #444; margin-bottom: 16px; }
-        .modul-link { display: inline-block; background: #0074d9; color: #fff; padding: 10px 22px; border-radius: 6px; text-decoration: none; font-weight: bold; transition: background 0.2s; }
-        .modul-link:hover { background: #005fa3; }
-    </style>
-</head>
-<body>
-    <div class="modul-list">
-        <div class="modul-card">
-            <div class="modul-title">Modül 1: Borsa ve Yatırımın Temelleri</div>
-            <div class="modul-desc">
-                Borsa nedir, yatırım yapmanın temel nedenleri ve "ortak olmak" kavramı hakkında yeni başlayanlar için anlaşılır bir giriş.
-            </div>
-            <a class="modul-link" href="/egitim/modul-1/">Detayları Gör</a>
-        </div>
-        <div class="modul-card">
-            <div class="modul-title">Modül 2: Kimler Yatırım Yapmalı, Kimler Yapmamalı?</div>
-            <div class="modul-desc">
-                Yatırıma başlamadan önce finansal ve psikolojik hazırlık, kimlerin yatırım yapmaması veya yapması gerektiği, örnekler ve kaynaklarla detaylı anlatım.
-            </div>
-            <a class="modul-link" href="/egitim/modul-2/">Detayları Gör</a>
-        </div>
-        <div class="modul-card">
-            <div class="modul-title">Modül 3: Borsada Psikoloji – "Nasıl Olmamalıyız?"</div>
-            <div class="modul-desc">
-                Borsada yatırımcı psikolojisi, yaygın duygusal tuzaklar, FOMO, panik satış, aşırı özgüven ve sabırlı yatırımcının avantajı. Kaynaklar ve örneklerle detaylı anlatım.
-            </div>
-            <a class="modul-link" href="/egitim/modul-3/">Detayları Gör</a>
-        </div>
-        <div class="modul-card">
-            <div class="modul-title">Modül 4: Teknik Analize Giriş – Temel Grafikler ve Göstergeler</div>
-            <div class="modul-desc">
-                Mum grafikleri, MA50, MA200, RSI ve MACD göstergeleri hakkında sade açıklamalar, örnekler ve grafik yer tutucularıyla teknik analiz rehberi.
-            </div>
-            <a class="modul-link" href="/egitim/modul-4/">Detayları Gör</a>
-        </div>
-        <!-- Gelecekte yeni modüller buraya eklenebilir -->
+<div class="edu-dark-bg">
+  <div class="edu-container">
+    <h1 class="edu-title">Eğitim</h1>
+    <div class="edu-desc">Borsa grafikleri nasıl okunur, analiz nasıl yapılır? Burada bulabilirsiniz.</div>
+    <div class="edu-modul-list">
+      <div class="edu-modul-card">
+        <div class="edu-modul-badge">1</div>
+        <div class="edu-modul-title">Modül 1: Borsa ve Yatırımın Temelleri</div>
+        <div class="edu-modul-text">Borsa nedir, yatırım yapmanın temel nedenleri ve "ortak olmak" kavramı hakkında yeni başlayanlar için anlaşılır bir giriş.</div>
+        <a class="edu-btn" href="/egitim/modul-1/">Detayları Gör</a>
+      </div>
+      <div class="edu-modul-card">
+        <div class="edu-modul-badge">2</div>
+        <div class="edu-modul-title">Modül 2: Kimler Yatırım Yapmalı, Kimler Yapmamalı?</div>
+        <div class="edu-modul-text">Yatırıma başlamadan önce finansal ve psikolojik hazırlık, kimlerin yatırım yapmaması veya yapması gerektiği, örnekler ve kaynaklarla detaylı anlatım.</div>
+        <a class="edu-btn" href="/egitim/modul-2/">Detayları Gör</a>
+      </div>
+      <div class="edu-modul-card">
+        <div class="edu-modul-badge">3</div>
+        <div class="edu-modul-title">Modül 3: Borsada Psikoloji – "Nasıl Olmamalıyız?"</div>
+        <div class="edu-modul-text">Borsada yatırımcı psikolojisi, yaygın duygusal tuzaklar, FOMO, panik satış, aşırı özgüven ve sabırlı yatırımcının avantajı. Kaynaklar ve örneklerle detaylı anlatım.</div>
+        <a class="edu-btn" href="/egitim/modul-3/">Detayları Gör</a>
+      </div>
+      <div class="edu-modul-card">
+        <div class="edu-modul-badge">4</div>
+        <div class="edu-modul-title">Modül 4: Teknik Analize Giriş – Temel Grafikler ve Göstergeler</div>
+        <div class="edu-modul-text">Mum grafikleri, MA50, MA200, RSI ve MACD göstergeleri hakkında sade açıklamalar, örnekler ve grafik yer tutucularıyla teknik analiz rehberi.</div>
+        <a class="edu-btn" href="/egitim/modul-4/">Detayları Gör</a>
+      </div>
     </div>
-</body>
-</html> 
+    <div class="edu-info-box">
+      <span class="edu-info-icon">🎓</span>
+      Tüm modülleri sırayla tamamladığınızda size özel bir <b>sertifika</b> verilir.
+    </div>
+  </div>
+</div>
+
+<style>
+.edu-dark-bg {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #121212 0%, #1C1C1C 100%);
+  font-family: 'Inter', 'Poppins', 'Roboto', Arial, sans-serif;
+  padding: 3rem 0 2rem 0;
+}
+.edu-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 2rem 2rem 2rem;
+}
+.edu-title {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -1px;
+  text-align: center;
+}
+.edu-desc {
+  color: #bbbbbb;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.edu-modul-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+.edu-modul-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1.5rem 1.3rem 1.3rem 1.3rem;
+  min-width: 270px;
+  max-width: 340px;
+  flex: 1 1 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  transition: transform 0.22s cubic-bezier(.4,1.2,.4,1), box-shadow 0.22s;
+}
+.edu-modul-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 32px 0 rgba(77,163,255,0.18);
+  z-index: 2;
+}
+.edu-modul-badge {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  background: linear-gradient(135deg, #4DA3FF 60%, #80BFFF 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(77,163,255,0.18);
+  border: 2px solid #232946;
+}
+.edu-modul-title {
+  color: #4DA3FF;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.7rem;
+}
+.edu-modul-text {
+  color: #DDDDDD;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+.edu-btn {
+  background: #4DA3FF;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s;
+  cursor: pointer;
+  outline: none;
+}
+.edu-btn:hover, .edu-btn:focus {
+  background: #62B3FF;
+  color: #232946;
+  transform: scale(1.07);
+  box-shadow: 0px 8px 16px rgba(77,163,255,0.18);
+}
+.edu-info-box {
+  margin: 0 auto;
+  margin-top: 2.5rem;
+  max-width: 500px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 1.2rem 1.2rem 1.2rem 1.7rem;
+  color: #A0C1FF;
+  font-size: 1.08rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  box-shadow: 0 2px 12px 0 rgba(77,163,255,0.10);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.13);
+}
+.edu-info-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+@media (max-width: 900px) {
+  .edu-container { padding: 2rem 0.5rem; }
+  .edu-modul-list { gap: 1.2rem; }
+}
+@media (max-width: 600px) {
+  .edu-title { font-size: 1.3rem; }
+  .edu-desc { font-size: 0.97rem; }
+  .edu-modul-list { flex-direction: column; gap: 1.1rem; }
+  .edu-modul-card { min-width: 0; max-width: 100%; padding: 1rem; }
+  .edu-modul-title { font-size: 1.05rem; }
+  .edu-modul-text { font-size: 0.95rem; }
+  .edu-btn { width: 100%; font-size: 0.97rem; padding: 0.7rem 0; }
+  .edu-info-box { font-size: 0.97rem; padding: 0.8rem 0.8rem 0.8rem 1.2rem; }
+}
+</style> 
