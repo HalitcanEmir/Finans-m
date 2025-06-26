@@ -32,3 +32,30 @@ class YatirimciHikaye(models.Model):
     class Meta:
         verbose_name = "Yatırımcı Hikayesi"
         verbose_name_plural = "Yatırımcı Hikayeleri"
+
+# Mini SSS (Sık Sorulan Sorular) Modeli
+class FaqQuestion(models.Model):
+    question = models.CharField(max_length=255)
+    short_answer = models.CharField(max_length=255)
+    long_answer = models.TextField(blank=True, null=True)
+    icon = models.CharField(max_length=100, blank=True)  # Emoji veya ikon ismi
+
+    def __str__(self):
+        return self.question
+
+    class Meta:
+        verbose_name = "SSS Sorusu"
+        verbose_name_plural = "SSS Soruları"
+
+# Yatırım Terimleri Sözlüğü Modeli
+class GlossaryTerm(models.Model):
+    term = models.CharField(max_length=100)
+    definition = models.CharField(max_length=255)
+    tooltip_text = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.term
+
+    class Meta:
+        verbose_name = "Yatırım Terimi"
+        verbose_name_plural = "Yatırım Terimleri"

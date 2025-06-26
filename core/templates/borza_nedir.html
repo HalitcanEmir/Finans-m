@@ -1,3 +1,73 @@
 {% include 'navbar.html' %}
-<div id="borsa-content"></div>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <!-- Mini SSS Bölümü -->
+  <h2 class="text-2xl font-bold mb-4 text-blue-700">Mini SSS</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    {% for faq in faqs|slice:":4" %}
+      <div class="border-2 border-blue-200 rounded-lg p-4 bg-white hover:shadow-2xl hover:border-blue-500 transition-all duration-300 group flex flex-col relative">
+        <div class="flex items-center space-x-2 mb-2">
+          <span class="text-2xl">{{ faq.icon }}</span>
+          <h3 class="font-semibold text-lg">{{ faq.question }}</h3>
+        </div>
+        <p class="text-gray-700">{{ faq.short_answer }}</p>
+        {% if faq.long_answer %}
+          <button onclick="toggleDetail({{ faq.id }})" class="text-blue-500 mt-2 self-start border border-blue-200 rounded px-2 py-1 text-sm hover:bg-blue-50 transition">Detaylı Bilgi</button>
+          <div id="detail-{{ faq.id }}" class="hidden mt-2 text-gray-600 border-l-4 border-blue-200 pl-3">{{ faq.long_answer }}</div>
+        {% endif %}
+      </div>
+    {% empty %}
+      <div class="col-span-2 text-gray-500">SSS bulunamadı.</div>
+    {% endfor %}
+  </div>
+
+  <!-- Yatırım Terimleri Mini Sözlüğü -->
+  <h2 class="text-2xl font-bold mb-4 text-green-700">Yatırım Terimleri Mini Sözlüğü</h2>
+  <div class="overflow-x-auto">
+    <table class="min-w-full whitespace-nowrap bg-white rounded-lg overflow-hidden">
+      <thead>
+        <tr>
+          <th class="py-2 px-4 text-left bg-green-100">#</th>
+          <th class="py-2 px-4 text-left bg-green-100">Terim</th>
+          <th class="py-2 px-4 text-left bg-green-100">Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for term in glossary %}
+          <tr class="transition" style="background-color: {% cycle '#e6f4ea' '#f0fdf4' %};">
+            <td class="py-2 px-4 font-bold text-green-700">{{ forloop.counter }}</td>
+            <td class="py-2 px-4 font-semibold relative group">
+              <span>{{ term.term }}</span>
+              {% if term.tooltip_text %}
+                <span class="ml-1 text-xs text-gray-400 cursor-pointer" onmouseenter="showTooltip(this)" onmouseleave="hideTooltip(this)">[?]
+                  <span class="tooltip hidden absolute z-10 left-1/2 -translate-x-1/2 mt-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg">{{ term.tooltip_text }}</span>
+                </span>
+              {% endif %}
+            </td>
+            <td class="py-2 px-4">{{ term.definition }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3" class="text-gray-500">Terim bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function toggleDetail(id) {
+  const el = document.getElementById('detail-' + id);
+  if (el) el.classList.toggle('hidden');
+}
+function showTooltip(el) {
+  const tooltip = el.querySelector('.tooltip');
+  if (tooltip) tooltip.classList.remove('hidden');
+}
+function hideTooltip(el) {
+  const tooltip = el.querySelector('.tooltip');
+  if (tooltip) tooltip.classList.add('hidden');
+}
+</script>
+
+<!-- Sayfa JS'si -->
 <script src="/static/js/borza_nedir.js"></script> 

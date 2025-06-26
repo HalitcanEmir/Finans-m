@@ -18,7 +18,7 @@ from django.views.decorators.http import require_GET
 from ta.trend import ADXIndicator
 import mplfinance as mpf
 from scipy.signal import find_peaks
-from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding, YatirimciHikaye
+from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding, YatirimciHikaye, FaqQuestion, GlossaryTerm
 from django.contrib import messages
 import requests
 import random
@@ -866,7 +866,9 @@ def yatirimcilar(request):
     return render(request, 'yatirimcilar.html')
 
 def borsa_nedir(request):
-    return render(request, 'borsa_nedir.html')
+    faqs = FaqQuestion.objects.all()
+    glossary = GlossaryTerm.objects.all()
+    return render(request, 'borsa_nedir.html', {'faqs': faqs, 'glossary': glossary})
 
 def gemini_chat(prompt):
     system_message = (
