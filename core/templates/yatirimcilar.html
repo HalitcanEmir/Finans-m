@@ -1,3 +1,134 @@
 {% include 'navbar.html' %}
+
+<section id="hikaye-kutusu-alani" class="hikaye-section">
+  <h2>Hiçbiri Düz Bir Yolda Yürümedi</h2>
+  <button id="hikaye-getir-btn">Rastgele Bir Hikâye Göster</button>
+  <div id="hikaye-goruntu" class="hikaye-kart" style="display: none;"></div>
+</section>
+
 <div id="investor-section"></div>
-<script src="/static/js/yatirimcilar.js"></script> 
+
+<script>
+document.getElementById("hikaye-getir-btn").addEventListener("click", function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.textContent = 'Hikaye Yükleniyor...';
+
+    fetch('/hikaye/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            const alan = document.getElementById("hikaye-goruntu");
+            alan.innerHTML = `
+                <h3>${data.isim}</h3>
+                <p><strong>Zorluk:</strong> ${data.zorluk}</p>
+                <p><strong>Bugünkü Durumu:</strong> ${data.bugunku_durum}</p>
+            `;
+            alan.style.display = "block";
+            
+            // Smooth scroll to the story
+            alan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Hikaye yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.textContent = 'Rastgele Bir Hikâye Göster';
+        });
+});
+</script>
+
+<style>
+.hikaye-section {
+  text-align: center;
+  margin: 50px auto;
+  padding: 0 20px;
+  max-width: 800px;
+}
+
+.hikaye-section h2 {
+  color: #EAEAEA;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+#hikaye-getir-btn {
+  background: #1D4ED8;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: none;
+  margin-top: 10px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+}
+
+#hikaye-getir-btn:hover:not(:disabled) {
+  background: #2563EB;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+}
+
+#hikaye-getir-btn:disabled {
+  cursor: not-allowed;
+}
+
+.hikaye-kart {
+  background: #1A1A1A;
+  color: #EAEAEA;
+  padding: 30px;
+  margin-top: 30px;
+  border-radius: 12px;
+  text-align: left;
+  box-shadow: 0 0 25px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.5s forwards;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hikaye-kart h3 {
+  color: #6699FF;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.hikaye-kart p {
+  margin: 1rem 0;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.hikaye-kart strong {
+  color: #BBB;
+  font-weight: 500;
+}
+</style>
+
+<script src="/static/js/yatirimcilar.js"></script>

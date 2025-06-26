@@ -18,9 +18,10 @@ from django.views.decorators.http import require_GET
 from ta.trend import ADXIndicator
 import mplfinance as mpf
 from scipy.signal import find_peaks
-from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding
+from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding, YatirimciHikaye
 from django.contrib import messages
 import requests
+import random
 
 # Ortam değişkenlerini yükle
 load_dotenv()
@@ -989,4 +990,15 @@ def sende_basla(request):
     return render(request, 'sende_basla.html', {
         'portfolio': portfolio,
         'holdings': holdings,
+    })
+
+def rastgele_hikaye(request):
+    tum_hikayeler = list(YatirimciHikaye.objects.all())
+    if not tum_hikayeler:
+        return JsonResponse({'error': 'Hikaye bulunamadı.'})
+    secilen = random.choice(tum_hikayeler)
+    return JsonResponse({
+        'isim': secilen.isim,
+        'zorluk': secilen.zorluk,
+        'bugunku_durum': secilen.bugunku_durum
     })

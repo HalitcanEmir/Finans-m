@@ -20,3 +20,15 @@ class VirtualTransaction(models.Model):
     price = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=10)  # 'buy' veya 'sell'
+
+class YatirimciHikaye(models.Model):
+    isim = models.CharField(max_length=100)
+    zorluk = models.TextField()
+    bugunku_durum = models.TextField()
+
+    def __str__(self):
+        return self.isim
+
+    class Meta:
+        verbose_name = "Yatırımcı Hikayesi"
+        verbose_name_plural = "Yatırımcı Hikayeleri"
