@@ -874,6 +874,115 @@ body {
     max-width: 98vw;
   }
 }
+
+.bilgi-bloklar-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+}
+.bilgi-blok {
+  border-radius: 1.2rem;
+  padding: 2rem 1.3rem 1.3rem 1.3rem;
+  max-width: 350px;
+  min-width: 220px;
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  background: #1c1f2a;
+  transition: box-shadow 0.3s, background 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.bg1 { background: #1c1f2a; }
+.bg2 { background: #242836; }
+.bilgi-blok:hover {
+  box-shadow: 0 8px 32px rgba(34,197,94,0.13);
+  background: #23263a;
+}
+.bilgi-blok-ikon-ust {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.7rem;
+}
+.bilgi-blok-ikon {
+  font-size: 2.2rem;
+  background: #23263a;
+  border-radius: 0.7rem;
+  padding: 0.3rem 0.7rem;
+  color: #38bdf8;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.08);
+}
+.bilgi-blok-baslik {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: #f9fafb;
+  text-align: left;
+  width: 100%;
+}
+.bilgi-blok-ozet {
+  font-size: 1.05rem;
+  opacity: 0.88;
+  margin-bottom: 0.5rem;
+  color: #e0e7ef;
+  text-align: left;
+  width: 100%;
+}
+.bilgi-blok-toggle-btn {
+  align-self: flex-end;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.35rem 1.1rem;
+  font-size: 0.98rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(37,99,235,0.08);
+}
+.bilgi-blok-toggle-btn:hover {
+  background: #1d4ed8;
+}
+.bilgi-blok-detay {
+  width: 100%;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s cubic-bezier(.4,0,.2,1);
+  font-size: 1.01rem;
+  line-height: 1.75;
+  color: #f1f5f9;
+  margin-top: 0.7rem;
+}
+.bilgi-blok-detay.acik {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 0.7rem;
+}
+.gizli { max-height: 0 !important; opacity: 0 !important; }
+@media (max-width: 900px) {
+  .bilgi-bloklar-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .bilgi-blok {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .bilgi-blok-ikon-ust {
+    justify-content: center;
+  }
+  .bilgi-blok-baslik, .bilgi-blok-ozet {
+    text-align: center;
+  }
+}
 </style>
 {% endblock %}
 
@@ -1284,6 +1393,98 @@ document.addEventListener('DOMContentLoaded', function() {
     alinti.classList.add('gorunur');
   }
 });
+</script>
+
+<!-- Bilgilendirici Açıklamalar (Borsa Nedir?) -->
+<section class="bilgi-bloklari py-16">
+  <h2 class="text-2xl font-bold text-center text-white mb-8">Borsa Hakkında Bilgilendirici Açıklamalar</h2>
+  <div class="bilgi-bloklar-container">
+    <!-- Blok 1 -->
+    <div class="bilgi-blok bg1 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div class="bilgi-blok-ikon-ust">
+        <span class="bilgi-blok-ikon">📊</span>
+      </div>
+      <h3 class="bilgi-blok-baslik">Borsa Nasıl İşler?</h3>
+      <p class="bilgi-blok-ozet">Borsa, şirketlerin hisse senetlerini halka arz ettiği ve yatırımcıların bu hisseleri alıp sattığı organize bir piyasadır.</p>
+      <button class="bilgi-blok-toggle-btn" onclick="toggleCard('card1')">Daha fazla oku</button>
+      <div id="card1" class="bilgi-blok-detay gizli">
+        <p>
+          Borsada alıcı ve satıcılar, elektronik ortamda veya aracı kurumlar üzerinden işlemlerini gerçekleştirir. Fiyatlar arz-talep dengesine göre anlık olarak değişir. Borsa, şeffaflık ve denetim açısından devlet kurumları tarafından düzenlenir.
+        </p>
+      </div>
+    </div>
+    <!-- Blok 2 -->
+    <div class="bilgi-blok bg2 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div class="bilgi-blok-ikon-ust">
+        <span class="bilgi-blok-ikon">💼</span>
+      </div>
+      <h3 class="bilgi-blok-baslik">Borsada Neye Yatırım Yapılır?</h3>
+      <p class="bilgi-blok-ozet">Borsada hisse senedi, tahvil, fon, emtia ve endeks gibi çeşitli yatırım araçları bulunur.</p>
+      <button class="bilgi-blok-toggle-btn" onclick="toggleCard('card2')">Daha fazla oku</button>
+      <div id="card2" class="bilgi-blok-detay gizli">
+        <p>
+          Hisse senetleri şirket ortaklığı sunarken, tahviller borçlanma aracı olarak sabit getiri sağlar. Fonlar ve endeksler ise çeşitlendirilmiş portföyler sunar. Emtialar (altın, gümüş vb.) da borsada işlem görebilir.
+        </p>
+      </div>
+    </div>
+    <!-- Blok 3 -->
+    <div class="bilgi-blok bg1 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div class="bilgi-blok-ikon-ust">
+        <span class="bilgi-blok-ikon">💸</span>
+      </div>
+      <h3 class="bilgi-blok-baslik">Borsada Para Kazanmak ve Kaybetmek</h3>
+      <p class="bilgi-blok-ozet">Borsada kazanç da kayıp da mümkündür. Fiyatlar dalgalanır, risk ve getiri birlikte düşünülmelidir.</p>
+      <button class="bilgi-blok-toggle-btn" onclick="toggleCard('card3')">Daha fazla oku</button>
+      <div id="card3" class="bilgi-blok-detay gizli">
+        <p>
+          Yatırımcılar, doğru analiz ve stratejiyle uzun vadede kazanç sağlayabilir. Ancak kısa vadeli dalgalanmalarda zarar riski de vardır. Sabır ve bilgi, borsada başarılı olmanın anahtarıdır.
+        </p>
+      </div>
+    </div>
+    <!-- Blok 4 -->
+    <div class="bilgi-blok bg2 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div class="bilgi-blok-ikon-ust">
+        <span class="bilgi-blok-ikon">👤</span>
+      </div>
+      <h3 class="bilgi-blok-baslik">Borsa Yatırımcısı Olmak Ne Demek?</h3>
+      <p class="bilgi-blok-ozet">Borsa yatırımcısı, şirketlere ortak olan ve ekonomik gelişmeleri takip eden kişidir.</p>
+      <button class="bilgi-blok-toggle-btn" onclick="toggleCard('card4')">Daha fazla oku</button>
+      <div id="card4" class="bilgi-blok-detay gizli">
+        <p>
+          Yatırımcılar, şirketlerin büyümesinden pay alır ve düzenli olarak finansal okuryazarlıklarını geliştirmelidir. Uzun vadeli bakış açısı, borsada başarı şansını artırır.
+        </p>
+      </div>
+    </div>
+    <!-- Blok 5 -->
+    <div class="bilgi-blok bg1 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div class="bilgi-blok-ikon-ust">
+        <span class="bilgi-blok-ikon">🎲</span>
+      </div>
+      <h3 class="bilgi-blok-baslik">Borsa Gerçekten Kumar mı?</h3>
+      <p class="bilgi-blok-ozet">Borsa, bilgi ve analizle yapılan bir yatırım alanıdır. Kumar değildir, ancak bilinçsizce yapılan işlemler risklidir.</p>
+      <button class="bilgi-blok-toggle-btn" onclick="toggleCard('card5')">Daha fazla oku</button>
+      <div id="card5" class="bilgi-blok-detay gizli">
+        <p>
+          Borsada yatırım, şansa değil, bilgiye ve stratejiye dayanır. Plansız ve rastgele yapılan işlemler ise kayıplara yol açabilir. Bilinçli yatırımcı olmak, borsayı kumardan ayıran en önemli farktır.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleCard(cardId) {
+  const detay = document.getElementById(cardId);
+  if (detay.classList.contains('acik')) {
+    detay.classList.remove('acik');
+    detay.classList.add('gizli');
+    detay.previousElementSibling.textContent = 'Daha fazla oku';
+  } else {
+    detay.classList.add('acik');
+    detay.classList.remove('gizli');
+    detay.previousElementSibling.textContent = 'Kapat';
+  }
+}
 </script>
 {% endblock %}
 
