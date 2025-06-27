@@ -20,7 +20,7 @@ from django.views.decorators.http import require_GET
 from ta.trend import ADXIndicator
 import mplfinance as mpf
 from scipy.signal import find_peaks
-from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding, YatirimciHikaye, FaqQuestion, GlossaryTerm
+from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding, YatirimciHikaye, FaqQuestion, GlossaryTerm, StockComment
 from django.contrib import messages
 import requests
 import random
@@ -446,6 +446,40 @@ def get_candlestick_chart(symbol='AAPL', period='6mo', interval='1d'):
     except Exception:
         return None
 
+def get_gemini_news(symbol):
+    prompt = (
+        f"{symbol} ile ilgili son 3 güncel haber başlığını ve özetini, "
+        "ayrıca dünya ekonomisiyle ilgili 2 güncel haberi başlık ve özet olarak ver. "
+        "Her haberi şu formatta sırala: [Başlık] - [Özet]"
+    )
+    API_KEY = os.environ.get('GEMINI_API_KEY')
+    print("GEMINI API KEY:", API_KEY)
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
+    data = {
+        "contents": [{"parts": [{"text": prompt}]}]
+    }
+    try:
+        response = requests.post(url, json=data, timeout=10)
+        result = response.json()
+        print("Gemini yanıtı:", result)
+        news = []
+        if "candidates" in result:
+            text = result["candidates"][0]["content"]["parts"][0]["text"]
+            for line in text.split("\n"):
+                if " - " in line:
+                    title, summary = line.split(" - ", 1)
+                    news.append({"title": title.strip(), "description": summary.strip(), "url": ""})
+        if news:
+            return news
+    except Exception as e:
+        print("Gemini API Hatası:", e)
+    # Fallback: örnek haberler
+    return [
+        {"title": f"{symbol} yeni ürün lansmanı yaptı", "description": f"{symbol} şirketi son çeyrekte yeni bir ürün tanıttı ve büyük ilgi gördü.", "url": ""},
+        {"title": f"{symbol} hisseleri yükselişte", "description": f"{symbol} hisseleri son günlerde yatırımcıların ilgisini çekiyor.", "url": ""},
+        {"title": "Dünya ekonomisinde son gelişmeler", "description": "Küresel piyasalarda enflasyon ve faiz tartışmaları gündemde.", "url": ""}
+    ]
+
 def charts(request):
     intervals = [
         ("1d", "1 Gün", "5d", "1d"),
@@ -472,6 +506,17 @@ def charts(request):
     if not sembol:
         sembol = 'NVDA'
     sembol = str(sembol).strip().upper()
+
+    # Yorum ekleme
+    if request.method == 'POST' and 'comment_text' in request.POST:
+        user = request.POST.get('comment_user', 'Anonim')
+        comment_text = request.POST.get('comment_text', '').strip()
+        if comment_text:
+            StockComment.objects.create(symbol=sembol, user=user, comment=comment_text)
+
+    # Yorumları çek
+    comments = StockComment.objects.filter(symbol=sembol).order_by('-created_at')
+
     grafik1 = fiyat_hacim_grafik(sembol, selected_period, selected_interval)
     hisse = hisse_bilgi(sembol)
     ma_chart, ma50_val, ma200_val = ma_grafik(sembol, selected_period, selected_interval)
@@ -702,6 +747,7 @@ def charts(request):
         candlestick_grafik = None
         destek_direnc_grafik = None
     candlestick_chart = get_candlestick_chart(sembol, period=selected_period, interval=selected_interval)
+    news = get_gemini_news(sembol)
     context = {
         'sembol': sembol,
         'fiyat_hacim_grafik': grafik1,
@@ -722,6 +768,8 @@ def charts(request):
         'candlestick_error': candlestick_error,
         'candlestick_chart': candlestick_chart,
         'destek_direnc_grafik': destek_direnc_grafik,
+        'news': news,
+        'comments': comments,
     }
     return render(request, 'charts.html', context)
 

@@ -59,3 +59,12 @@ class GlossaryTerm(models.Model):
     class Meta:
         verbose_name = "Yatırım Terimi"
         verbose_name_plural = "Yatırım Terimleri"
+
+class StockComment(models.Model):
+    symbol = models.CharField(max_length=20)
+    user = models.CharField(max_length=100)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.symbol} - {self.user} - {self.created_at}"

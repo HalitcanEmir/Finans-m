@@ -427,15 +427,52 @@
                 </div>
             </div>
         </div>
-        <!-- Güncel haberler bölümü (placeholder) -->
+        <!-- Güncel haberler bölümü -->
         <div class="news-section mt-5">
             <div class="news-title">Güncel Haberler &amp; Duyurular</div>
-            <div class="news-placeholder">Bu hisseyle ilgili güncel haberler ve duyurular burada listelenecek. (Entegrasyon için API veya RSS eklenebilir.)</div>
+            {% if news and news|length > 0 %}
+                <ul class="list-group">
+                    {% for article in news %}
+                        <li class="list-group-item bg-dark text-light border-secondary mb-2">
+                            <a href="{{ article.url }}" target="_blank" class="fw-bold text-info">{{ article.title }}</a>
+                            <div style="font-size:0.95em; color:#aaa;">{{ article.publishedAt|date:'d.m.Y H:i' }}</div>
+                            <div>{{ article.description }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="news-placeholder">Bu hisseyle ilgili güncel haber bulunamadı.</div>
+            {% endif %}
         </div>
-        <!-- Kullanıcı yorumları/notları bölümü (placeholder) -->
+        <!-- Kullanıcı yorumları/notları bölümü -->
         <div class="comments-section mt-4">
             <div class="comments-title">Kullanıcı Yorumları &amp; Notlar</div>
-            <div class="comments-placeholder">Kullanıcılar bu hisseyle ilgili yorumlarını ve analiz notlarını burada paylaşabilecek. (Yorum sistemi entegre edilebilir.)</div>
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                <div class="row g-2 align-items-end">
+                    <div class="col-12 col-md-3">
+                        <input type="text" name="comment_user" class="form-control" placeholder="Adınız (isteğe bağlı)">
+                    </div>
+                    <div class="col-12 col-md-7">
+                        <textarea name="comment_text" class="form-control" placeholder="Yorumunuzu veya analiz notunuzu yazın..." required rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <button class="btn btn-success w-100">Yorum Ekle</button>
+                    </div>
+                </div>
+            </form>
+            {% if comments and comments|length > 0 %}
+                <ul class="list-group">
+                    {% for c in comments %}
+                        <li class="list-group-item bg-dark text-light border-secondary mb-2">
+                            <div class="fw-bold">{{ c.user|default:'Anonim' }} <span style="font-size:0.95em; color:#aaa;">{{ c.created_at|date:'d.m.Y H:i' }}</span></div>
+                            <div>{{ c.comment }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="comments-placeholder">Henüz yorum yok. İlk yorumu siz bırakın!</div>
+            {% endif %}
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

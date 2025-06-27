@@ -2,6 +2,10 @@
 
 from django.db import migrations, models
 
+def add_example_comments(apps, schema_editor):
+    StockComment = apps.get_model('core', 'StockComment')
+    StockComment.objects.create(symbol='NVDA', user='ali', comment='Çok iyi bir hisse, uzun vadede tutuyorum.')
+    StockComment.objects.create(symbol='NVDA', user='ayse', comment='Kısa vadede volatil ama potansiyeli yüksek.')
 
 class Migration(migrations.Migration):
 
@@ -37,4 +41,5 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Yatırım Terimleri',
             },
         ),
+        migrations.RunPython(add_example_comments),
     ]
