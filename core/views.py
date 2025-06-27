@@ -24,6 +24,7 @@ from .models import VirtualPortfolio, VirtualTransaction, VirtualHolding, Yatiri
 from django.contrib import messages
 import requests
 import random
+import matplotlib.dates as mdates
 
 # Ortam değişkenlerini yükle
 load_dotenv()
@@ -679,8 +680,14 @@ def charts(request):
                 dividends.plot(kind='bar', color='green', ax=ax_div)
                 ax_div.set_title(f"{sembol} Temettü Tarihçesi")
                 ax_div.set_ylabel("USD")
-                ax_div.grid(True)
+                ax_div.set_xlabel("Date")
+                # Tarih formatını kısalt
+                dates = [d.strftime('%Y-%m-%d') for d in dividends.index]
+                step = max(1, len(dates)//12)
+                ax_div.set_xticks(range(0, len(dates), step))
+                ax_div.set_xticklabels([dates[i] for i in range(0, len(dates), step)], rotation=45, ha='right')
                 fig_div.tight_layout()
+                fig_div.autofmt_xdate()
                 temettu_grafik = grafik_to_base64(fig_div)
             else:
                 temettu_grafik = None
