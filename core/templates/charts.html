@@ -435,8 +435,6 @@
                     {% for article in news %}
                         <li class="list-group-item bg-dark text-light border-secondary mb-2">
                             <a href="{{ article.url }}" target="_blank" class="fw-bold text-info">{{ article.title }}</a>
-                            <div style="font-size:0.95em; color:#aaa;">{{ article.publishedAt|date:'d.m.Y H:i' }}</div>
-                            <div>{{ article.description }}</div>
                         </li>
                     {% endfor %}
                 </ul>
@@ -464,9 +462,15 @@
             {% if comments and comments|length > 0 %}
                 <ul class="list-group">
                     {% for c in comments %}
-                        <li class="list-group-item bg-dark text-light border-secondary mb-2">
-                            <div class="fw-bold">{{ c.user|default:'Anonim' }} <span style="font-size:0.95em; color:#aaa;">{{ c.created_at|date:'d.m.Y H:i' }}</span></div>
-                            <div>{{ c.comment }}</div>
+                        <li class="list-group-item bg-dark text-light border-secondary mb-2 d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold">{{ c.user|default:'Anonim' }} <span style="font-size:0.95em; color:#aaa;">{{ c.created_at|date:'d.m.Y H:i' }}</span></div>
+                                <div>{{ c.comment }}</div>
+                            </div>
+                            <form method="post" action="{% url 'delete_comment' c.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger ms-2" onclick="return confirm('Yorumu silmek istediğinize emin misiniz?');">Sil</button>
+                            </form>
                         </li>
                     {% endfor %}
                 </ul>

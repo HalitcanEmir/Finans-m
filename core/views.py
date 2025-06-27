@@ -1,8 +1,8 @@
 import os
 import json
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from dotenv import load_dotenv
 from openai import OpenAI
 import matplotlib
@@ -448,9 +448,7 @@ def get_candlestick_chart(symbol='AAPL', period='6mo', interval='1d'):
 
 def get_gemini_news(symbol):
     prompt = (
-        f"{symbol} ile ilgili son 3 güncel haber başlığını ve özetini, "
-        "ayrıca dünya ekonomisiyle ilgili 2 güncel haberi başlık ve özet olarak ver. "
-        "Her haberi şu formatta sırala: [Başlık] - [Özet]"
+        f"{symbol} hissesiyle ilgili en güncel 3 haberin başlığını ve linkini bana ver. Sadece başlık ve link olarak, Türkçe, şu formatta: [Başlık] | [Link]"
     )
     API_KEY = os.environ.get('GEMINI_API_KEY')
     print("GEMINI API KEY:", API_KEY)
@@ -466,18 +464,18 @@ def get_gemini_news(symbol):
         if "candidates" in result:
             text = result["candidates"][0]["content"]["parts"][0]["text"]
             for line in text.split("\n"):
-                if " - " in line:
-                    title, summary = line.split(" - ", 1)
-                    news.append({"title": title.strip(), "description": summary.strip(), "url": ""})
+                if "|" in line:
+                    title, url = line.split("|", 1)
+                    news.append({"title": title.strip(), "url": url.strip()})
         if news:
             return news
     except Exception as e:
         print("Gemini API Hatası:", e)
     # Fallback: örnek haberler
     return [
-        {"title": f"{symbol} yeni ürün lansmanı yaptı", "description": f"{symbol} şirketi son çeyrekte yeni bir ürün tanıttı ve büyük ilgi gördü.", "url": ""},
-        {"title": f"{symbol} hisseleri yükselişte", "description": f"{symbol} hisseleri son günlerde yatırımcıların ilgisini çekiyor.", "url": ""},
-        {"title": "Dünya ekonomisinde son gelişmeler", "description": "Küresel piyasalarda enflasyon ve faiz tartışmaları gündemde.", "url": ""}
+        {"title": f"{symbol} yeni ürün lansmanı yaptı", "url": "https://www.example.com/nvda-yeni-urun"},
+        {"title": f"{symbol} hisseleri yükselişte", "url": "https://www.example.com/nvda-hisseleri"},
+        {"title": "Dünya ekonomisinde son gelişmeler", "url": "https://www.example.com/dunya-ekonomisi"}
     ]
 
 def charts(request):
@@ -513,6 +511,7 @@ def charts(request):
         comment_text = request.POST.get('comment_text', '').strip()
         if comment_text:
             StockComment.objects.create(symbol=sembol, user=user, comment=comment_text)
+            return HttpResponseRedirect(request.path + f'?symbol={sembol}&interval={selected_code}')
 
     # Yorumları çek
     comments = StockComment.objects.filter(symbol=sembol).order_by('-created_at')
@@ -1098,3 +1097,12 @@ def investment_projection(request):
             }
         return JsonResponse(result)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+# Yorum silme view
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(StockComment, id=comment_id)
+    # Sadece yorumu ekleyen kullanıcı veya anonim ise silebilsin (gelişmiş kullanıcı sistemi yoksa)
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, 'Yorum silindi.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
