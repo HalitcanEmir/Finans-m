@@ -982,6 +982,10 @@ def chatbot(request):
 def sende_basla(request):
     holdings = []
     portfolio = None
+    total_value = 0
+    total_cost = 0
+    total_pl = 0
+    total_shares = 0
     if request.user.is_authenticated:
         portfolio, _ = VirtualPortfolio.objects.get_or_create(user=request.user)
 
@@ -1006,10 +1010,10 @@ def sende_basla(request):
                 price = None
 
             if price is not None and quantity > 0:
-                total_cost = price * quantity
-                if portfolio.balance >= total_cost:
+                total_cost_post = price * quantity
+                if portfolio.balance >= total_cost_post:
                     try:
-                        portfolio.balance -= total_cost
+                        portfolio.balance -= total_cost_post
                         portfolio.save()
                         VirtualTransaction.objects.create(
                             user=request.user,
@@ -1048,13 +1052,21 @@ def sende_basla(request):
                     current_price = None
                 else:
                     current_price = price_hist['Close'][-1]
+                info = stock.info
+                company_name = info.get('shortName') or info.get('longName') or h.stock_symbol
             except Exception:
                 current_price = None
+                company_name = h.stock_symbol
             profit_loss = None
             profit_loss_pct = None
             if current_price is not None:
                 profit_loss = (current_price - h.avg_price) * h.quantity
                 profit_loss_pct = ((current_price - h.avg_price) / h.avg_price) * 100 if h.avg_price else None
+                total_value += current_price * h.quantity
+            total_cost += h.avg_price * h.quantity
+            total_shares += h.quantity
+            if profit_loss is not None:
+                total_pl += profit_loss
             holdings.append({
                 'symbol': h.stock_symbol,
                 'quantity': h.quantity,
@@ -1062,11 +1074,16 @@ def sende_basla(request):
                 'current_price': current_price,
                 'profit_loss': profit_loss,
                 'profit_loss_pct': profit_loss_pct,
+                'company_name': company_name,
             })
 
     return render(request, 'sende_basla.html', {
         'portfolio': portfolio,
         'holdings': holdings,
+        'total_value': total_value,
+        'total_cost': total_cost,
+        'total_pl': total_pl,
+        'total_shares': total_shares,
     })
 
 def rastgele_hikaye(request):
